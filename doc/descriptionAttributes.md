@@ -7,6 +7,7 @@
 |  | - | rating_out | NULL | numeric | Внешний рейтинг настольной игры |
 |  | - | content | NOT NULL | text | Описание настольной игры |
 |  | - | age | NOT NULL | integer | Возрастное ограничение настольной игры |
+|  | - | min_number_players | NULL | integer | Максимальное количество игроков |
 |  | - | max_number_players | NULL | integer | Максимальное количество игроков |
 |  | FK | marker_id | NULL | integer | Издательство настольной игры |
 | 🖊️**Marker** | PK | id | NOT NULL | integer | Поле, идентифицирующее создателя настольной игры |
@@ -23,6 +24,7 @@
 |  | - | password | NOT NULL | text | Пароль пользователя |
 |  | - | social_network | NULL | text | Ссылка на социальную сеть пользователя |
 |  | - | is_show_city | NOT NULL, DEFAULT=true | boolean | Нужно ли показывать информацию о местонахождении другим пользователям |
+|  | - | role | NOT NULL, DEFAULT='user' | text | Роль пользователя в системе |
 | ❤️**FavouriteGenre** | PK | id | NOT NULL | integer | Поле, идентифицирующее любимый жанр пользователя |
 |  | FK | genre_id | NOT NULL | integer | Жанр |
 |  | FK | user_id | NOT NULL | integer | Пользователь |
@@ -32,6 +34,7 @@
 |  | - | rate | NOT NULL | integer | Личная оценка настольной игры от пользователя |
 | ❓**BlockComment** | PK | id | NOT NULL | integer | Поле, идентифицирующее блок комментариев |
 |  | FK | game_id | NOT NULL | integer | Пользователь |
+|  | - | author | NOT NULL | integer | Пользователь, который создал блок комментариев |
 |  | - | header | NOT NULL | text | Первоначальный комментай/вопрос для обсуждения - заголовок блока комментариев |
 |  | - | deleted_at | NULL | datetime | Дата удаления блока комментариев |
 | 💬**Comment** | PK | id | NOT NULL | integer | Поле, идентифицирующее комментарий |
@@ -43,9 +46,13 @@
 |  | - | name | NOT NULL | text | Название настольной игры, которую необходимо добавить |
 |  | - | is_done | NOT NULL, DEFAULT=false | boolean | Выполнен ли запрос со стороны администратора |
 |  | FK | user_id | NOT NULL | integer | Пользователь, отправивший запрос |
+|  | - | details | NULL | text | Подробности заявки, которые пользователь считает необходимыми |
 | ❗**Complaint** | PK | id | NOT NULL | integer | Поле, идентифицирующее жалобу |
 |  | FK | user_id | NOT NULL | integer | Пользователь, отправивший жалобу |
 |  | FK | comment_id | NOT NULL | integer | Комментарий, на который отправлена жалоба |
+| ✅**Subscription** | PK | id | NOT NULL | integer | Поле, идентифицирующее подписку |
+|  | FK | user_id | NOT NULL | integer | Пользователь, который подписывается на аккаунт |
+|  | FK | account | NOT NULL | integer | Пользователь, на которого оформляется подписка |
 
 
 
