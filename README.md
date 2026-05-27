@@ -177,3 +177,32 @@
    - [ ] Оформление README c инструкцией запуска
    - [ ] Обработка ошибок везде
    - [ ] Подготовка презентации
+
+## Структура папок проекта
+
+```
+berloga/
+├── packages/
+│   ├── client/
+│   │   ├── src/
+│   │   │   ├── pages/          # Страницы приложения
+│   │   │   ├── components/     # Переиспользуемые компоненты
+│   │   │   ├── stores/         # Zustand stores
+│   │   │   ├── api/            # Axios-клиент и запросы
+│   │   │   ├── types/          # TypeScript типы
+│   │   │   ├── utils/          # Утилиты
+│   │   │   └── validations/    # Валидация для полей в формах
+│   │   └── ...
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── routes/         # Express роуты
+│   │   │   ├── controllers/    # Контроллеры
+│   │   │   ├── services/       # Бизнес-логика
+│   │   │   ├── middleware/     # Auth, validation, roles
+│   │   │   ├── models/         # Schema + migrations
+│   │   │   └── utils/          # Утилиты (mail, tokens)
+│   │   └── ...
+│   ├── docker-compose.yml
+│   └── README.md
+└── ...
+```
