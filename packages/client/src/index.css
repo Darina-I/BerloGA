@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-main-color: #761f21;
+  --color-second-color: #eed9b9;
+}
+
+body {
+  background-color: #fff8eb;
+  color: #504141;
+  font-family: "Lora";
+}
