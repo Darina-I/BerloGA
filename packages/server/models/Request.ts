@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import User from "./User";
 
 interface RequestAttributes {
   id?: number;
@@ -44,10 +43,5 @@ Request.init(
     timestamps: true,
   },
 );
-
-Request.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
 
 export default Request;

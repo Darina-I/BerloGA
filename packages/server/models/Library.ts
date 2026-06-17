@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import User from "./User";
-import BoardGame from "./BoardGame";
 
 interface LibraryAttributes {
   id?: number;
@@ -44,15 +42,5 @@ Library.init(
     timestamps: true,
   },
 );
-
-Library.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
-
-Library.belongsTo(BoardGame, {
-  foreignKey: "game_id",
-  as: "game",
-});
 
 export default Library;

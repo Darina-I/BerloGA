@@ -22,7 +22,7 @@ const databaseUrl = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES
 
 export const sequelize = new Sequelize(databaseUrl, {
   dialect: "postgres",
-  logging: false,
+  logging: console.log,
 });
 
 export async function testConnection(): Promise<void> {

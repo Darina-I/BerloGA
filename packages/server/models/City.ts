@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import User from "./User";
 
 interface CityAttributes {
   id?: number;
@@ -23,10 +22,5 @@ City.init(
     timestamps: true,
   },
 );
-
-City.hasMany(User, {
-  foreignKey: "city_id",
-  as: "users",
-});
 
 export default City;

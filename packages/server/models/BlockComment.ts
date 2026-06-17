@@ -1,8 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import BoardGame from "./BoardGame";
-import User from "./User";
-import Comment from "./Comment";
 
 interface BlockCommentAttributes {
   id?: number;
@@ -51,20 +48,5 @@ BlockComment.init(
     timestamps: true,
   },
 );
-
-BlockComment.belongsTo(BoardGame, {
-  foreignKey: "game_id",
-  as: "game",
-});
-
-BlockComment.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
-
-BlockComment.hasMany(Comment, {
-  foreignKey: "blockComment_id",
-  as: "comments",
-});
 
 export default BlockComment;

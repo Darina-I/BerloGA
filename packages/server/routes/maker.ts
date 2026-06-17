@@ -1,9 +1,9 @@
 import express from "express";
 import Maker from "../models/Maker";
 
-const router = express.Router();
+const makerRouter = express.Router();
 
-router.get("/makers", async (req, res) => {
+makerRouter.get("/makers", async (req, res) => {
   try {
     const makers = await Maker.findAll();
     res.json(makers);
@@ -12,4 +12,4 @@ router.get("/makers", async (req, res) => {
   }
 });
 
-export default router;
+export default makerRouter;

@@ -1,9 +1,9 @@
 import express from "express";
 import Genre from "../models/Genre";
 
-const router = express.Router();
+const genreRouter = express.Router();
 
-router.get("/genres", async (req, res) => {
+genreRouter.get("/genres", async (req, res) => {
   try {
     const genres = await Genre.findAll();
     res.json(genres);
@@ -12,4 +12,4 @@ router.get("/genres", async (req, res) => {
   }
 });
 
-export default router;
+export default genreRouter;

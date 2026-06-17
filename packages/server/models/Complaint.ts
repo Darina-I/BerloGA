@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import User from "./User";
-import Comment from "./Comment";
 
 interface ComplaintAttributes {
   id?: number;
@@ -40,15 +38,5 @@ Complaint.init(
     timestamps: true,
   },
 );
-
-Complaint.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
-
-Complaint.belongsTo(Comment, {
-  foreignKey: "comment_id",
-  as: "comment",
-});
 
 export default Complaint;

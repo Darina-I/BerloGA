@@ -1,9 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import Maker from "./Maker";
-import Library from "./Library";
-import BlockComment from "./BlockComment";
-import GenreGame from "./GenreGame";
 
 interface BoardGameAttributes {
   id?: number;
@@ -68,25 +64,5 @@ BoardGame.init(
     timestamps: true,
   },
 );
-
-BoardGame.belongsTo(Maker, {
-  foreignKey: "maker_id",
-  as: "maker",
-});
-
-BoardGame.hasMany(Library, {
-  foreignKey: "game_id",
-  as: "libraries",
-});
-
-BoardGame.hasMany(BlockComment, {
-  foreignKey: "game_id",
-  as: "blockscomments",
-});
-
-BoardGame.hasMany(GenreGame, {
-  foreignKey: "game_id",
-  as: "genresgame",
-});
 
 export default BoardGame;

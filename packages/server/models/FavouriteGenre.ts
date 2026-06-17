@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import Genre from "./Genre";
-import User from "./User";
 
 interface FavouriteGenreAttributes {
   id?: number;
@@ -40,15 +38,5 @@ FavouriteGenre.init(
     timestamps: true,
   },
 );
-
-FavouriteGenre.belongsTo(Genre, {
-  foreignKey: "genre_id",
-  as: "genre",
-});
-
-FavouriteGenre.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
 
 export default FavouriteGenre;

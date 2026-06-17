@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import BlockComment from "./BlockComment";
-import User from "./User";
 
 interface CommentAttributes {
   id?: number;
@@ -50,15 +48,5 @@ Comment.init(
     timestamps: true,
   },
 );
-
-Comment.belongsTo(BlockComment, {
-  foreignKey: "blockComment_id",
-  as: "blockComment",
-});
-
-Comment.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
 
 export default Comment;

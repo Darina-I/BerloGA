@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import FavouriteGenre from "./FavouriteGenre";
-import GenreGame from "./GenreGame";
 
 interface GenreAttributes {
   id?: number;
@@ -24,15 +22,5 @@ Genre.init(
     timestamps: true,
   },
 );
-
-Genre.hasMany(FavouriteGenre, {
-  foreignKey: "genre_id",
-  as: "favouritegenres",
-});
-
-Genre.hasMany(GenreGame, {
-  foreignKey: "genre_id",
-  as: "genregames",
-});
 
 export default Genre;

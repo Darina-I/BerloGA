@@ -1,7 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
-import Genre from "./Genre";
-import BoardGame from "./BoardGame";
 
 interface GenreGameAttributes {
   id?: number;
@@ -40,15 +38,5 @@ GenreGame.init(
     timestamps: true,
   },
 );
-
-GenreGame.belongsTo(Genre, {
-  foreignKey: "genre_id",
-  as: "genre",
-});
-
-GenreGame.belongsTo(BoardGame, {
-  foreignKey: "game_id",
-  as: "game",
-});
 
 export default GenreGame;
