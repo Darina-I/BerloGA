@@ -2,15 +2,15 @@ export interface BoardGameItemProps {
   id: number;
   name: string;
   genres: string[];
-  time: string;
+  time?: string;
   photo: string;
-  rating_in: number;
+  rating: number;
   content: string;
-  age: number;
-  min_number_players: number;
-  max_number_players: number;
+  age?: number;
+  min_number_players?: number;
+  max_number_players?: number;
   maker: string;
-  pdf: string;
+  pdf?: string;
 }
 
 export interface BoardGamesProps {
