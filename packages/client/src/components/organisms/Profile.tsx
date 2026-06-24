@@ -1,8 +1,11 @@
+import { useSelector } from "react-redux";
 import { edit, person } from "../../assets";
 import Button from "../atoms/Button";
 import ListItems from "../molecules/ListItems";
+import type { RootState } from "../../store";
 
 const Profile = () => {
+  const user = useSelector((state: RootState) => state.user.user);
   return (
     <div className="border-2 border-second-color rounded-lg p-5 space-y-5 relative">
       <div className="absolute right-5">
@@ -13,18 +16,22 @@ const Profile = () => {
           <img src={person} width={80} />
         </div>
         <div className="w-1/2">
-          <p className="text-2xl font-bold">PingDDD</p>
+          <p className="text-2xl font-bold">{user?.nickname}</p>
           <div className="mt-3 text-lg">
-            <div className="flex items-center gap-2">
-              <p>Email:</p>
-              <div className="flex-1 h-[0.5px] bg-second-color" />
-              <p>darina@mail.ru</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <p>Город:</p>
-              <div className="flex-1 h-[0.5px] bg-second-color" />
-              <p>Тюмень</p>
-            </div>
+            {user?.email && (
+              <div className="flex items-center gap-2">
+                <p>Email:</p>
+                <div className="flex-1 h-[0.5px] bg-second-color" />
+                <p>{user?.email}</p>
+              </div>
+            )}
+            {user?.city && (
+              <div className="flex items-center gap-2">
+                <p>Город:</p>
+                <div className="flex-1 h-[0.5px] bg-second-color" />
+                <p>{user.city.name}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -16,6 +16,7 @@ import genreRouter from "./routes/genre";
 import makerRouter from "./routes/maker";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
@@ -50,5 +51,6 @@ app.use("/api", genreRouter);
 app.use("/api", makerRouter);
 app.use("/api", requestRouter);
 app.use("/api", userRouter);
+app.use("/api", authRouter);
 
 export default app;

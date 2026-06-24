@@ -4,8 +4,11 @@ import {
   getAllGenre,
   postGenre,
 } from "../controllers/genreController";
+import { authMiddleware } from "../middleware/guard";
 
 const genreRouter = express.Router();
+
+genreRouter.use(authMiddleware); //только для авторизованных пользователей
 
 genreRouter
   .route("/genres")
