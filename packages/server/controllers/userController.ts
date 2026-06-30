@@ -1,0 +1,235 @@
+import { Request, Response } from "express";
+import Library from "../models/Library";
+import BoardGame from "../models/BoardGame";
+import Genre from "../models/Genre";
+import Maker from "../models/Maker";
+import FavouriteGenre from "../models/FavouriteGenre";
+import User from "../models/User";
+import City from "../models/City";
+
+interface AuthRequest extends Request {
+  user?: { userId: number };
+}
+
+export const getMe = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(500).json({ error: "Middleware не сработал" });
+    }
+
+    const currentUserId = req.user.userId;
+
+    const user = await User.findOne({
+      where: { id: currentUserId },
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: "Пользователь не найден",
+      });
+    }
+
+    res.status(200).json({
+      message: "Пользователь найден",
+      user: {
+        id: user.id,
+        nickname: user.nickname,
+        email: user?.email,
+        city: user?.city,
+        social_network: user?.social_network,
+        is_show_city: user.is_show_city,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Ошибка при получании пользователя", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const putUser = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+    const newProfile = req.body.data;
+
+    const [count] = await User.update(newProfile, {
+      where: { id: currentUserId },
+      returning: true,
+    });
+
+    if (count === 0) {
+      return res.status(404).json({ error: "Пользователь не найден" });
+    }
+
+    const userData = await User.findOne({
+      where: { id: currentUserId },
+      attributes: {
+        exclude: ["password", "createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
+    res.status(200).json({
+      message: "Профиль успешно обновлен",
+      user: userData,
+    });
+  } catch (error) {
+    console.error("Ошибка при обновлении пользователя", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const getLibrary = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+
+    const library = await Library.findAll({
+      where: { user_id: currentUserId },
+      attributes: ["id", "rate"],
+      include: [
+        {
+          model: BoardGame,
+          as: "game",
+          include: [
+            {
+              model: Genre,
+              as: "genres",
+              through: { attributes: [] },
+              attributes: ["id", "name"],
+              required: false,
+            },
+            {
+              model: Maker,
+              as: "maker",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    res.status(200).json(library);
+  } catch (error) {
+    console.error("Ошибка при получении библиотеки пользователя:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+interface FavouriteGenreWithAssociation extends FavouriteGenre {
+  genre: {
+    id: number;
+    name: string;
+  } | null;
+}
+
+export const getUserGenres = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+
+    const favourite = (await FavouriteGenre.findAll({
+      where: { user_id: currentUserId },
+      include: [
+        {
+          model: Genre,
+          as: "genre",
+          attributes: ["id", "name"],
+        },
+      ],
+    })) as FavouriteGenreWithAssociation[];
+
+    const genres = favourite.map((item) => item.genre);
+
+    res.status(200).json(genres);
+  } catch (error) {
+    console.error("Ошибка при получении любимых жанров пользователя:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const postUserGenre = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+    const { genreId } = req.body;
+
+    const newFavouriteGenre = await FavouriteGenre.create({
+      user_id: currentUserId,
+      genre_id: genreId,
+    });
+    res.status(201).json(newFavouriteGenre);
+  } catch (error) {
+    console.error("Ошибка при добавлении жанра в любимые: ", error);
+    res.status(500).json({
+      error: "Не удалось добавить жанр в любимые",
+      details: (error as Error).message,
+    });
+  }
+};
+
+export const deleteUserGenre = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+    const genreId = parseInt(req.params.genreId as string, 10);
+    if (!genreId || isNaN(genreId) || genreId <= 0) {
+      return res.status(400).json({
+        error: "Некорректный ID жанра",
+      });
+    }
+
+    const genre = await FavouriteGenre.findOne({
+      where: {
+        user_id: currentUserId,
+        genre_id: genreId,
+      },
+    });
+
+    if (!genre) {
+      return res.status(404).json({
+        error: "Любимый жанр не найден",
+      });
+    }
+
+    await genre.destroy();
+    res.status(200).json({
+      message: "Любимый жанр удалён успешно",
+    });
+  } catch (error) {
+    console.error("Ошибка при удалении любимого жанра:", error);
+    res.status(500).json({
+      error: "Не удалось удалить любимый жанр",
+      details: (error as Error).message,
+    });
+  }
+};

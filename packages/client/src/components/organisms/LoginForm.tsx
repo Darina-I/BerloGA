@@ -18,7 +18,9 @@ const LoginForm = () => {
 
   const [error, setError] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -50,8 +52,6 @@ const LoginForm = () => {
         dispatch(
           setUser({
             user: result.user,
-            accessToken: result.tokens.accessToken,
-            refreshToken: result.tokens.refreshToken,
           }),
         );
         navigate("/");

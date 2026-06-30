@@ -1,10 +1,11 @@
-import axios from "axios";
-import { BASE_URL } from "./config";
+import { BOARDGAME_API_URL } from "./config";
+import api from "./client";
 
 export const boardGameApi = {
   getAll: async () => {
-    const response = axios.get(`${BASE_URL}/boardgames`);
+    const response = api.get(`${BOARDGAME_API_URL}`);
     return (await response).data;
   },
-  getById: (id: number) => axios.get(`${BASE_URL}/boardgames/${id}`),
+  getById: (id: number) => api.get(`${BOARDGAME_API_URL}/${id}`),
+  getGenreById: (id: number) => api.get(`${BOARDGAME_API_URL}/${id}/genres`),
 };

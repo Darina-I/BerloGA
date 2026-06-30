@@ -10,10 +10,6 @@ const makerRouter = express.Router();
 
 makerRouter.use(authMiddleware); //только для авторизованных пользователей
 
-makerRouter
-  .route("/maker")
-  .get(getAllMakers)
-  .post(postMaker)
-  .delete(deleteMaker);
+makerRouter.route("/").get(getAllMakers).post(postMaker).delete(deleteMaker);
 
 export default makerRouter;

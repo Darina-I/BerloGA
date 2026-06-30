@@ -28,9 +28,11 @@ BoardGame.hasMany(BlockComment, {
   as: "blockscomments",
 });
 
-BoardGame.hasMany(GenreGame, {
+BoardGame.belongsToMany(Genre, {
+  through: "genregames",
+  as: "genres",
   foreignKey: "game_id",
-  as: "genresgame",
+  otherKey: "genre_id",
 });
 
 //связи таблицы Maker
@@ -100,9 +102,11 @@ Genre.hasMany(FavouriteGenre, {
   as: "favouritegenres",
 });
 
-Genre.hasMany(GenreGame, {
+Genre.belongsToMany(BoardGame, {
+  through: "genregames",
+  as: "games",
   foreignKey: "genre_id",
-  as: "genregames",
+  otherKey: "game_id",
 });
 
 //связи таблицы GenreGame

@@ -17,7 +17,7 @@ const App = () => {
     if (!isAuth) {
       return <Navigate to="/login" />;
     }
-    return <Outlet />; //отображает содержимое вложенных маршритов
+    return <Outlet />; //отображает содержимое вложенных маршрутов
   };
   return (
     <BrowserRouter>

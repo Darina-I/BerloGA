@@ -4,11 +4,14 @@ import {
   getBoardGameById,
   getGenresGame,
 } from "../controllers/boardGameController";
+import { authMiddleware } from "../middleware/guard";
 
 const boardgameRouter = express.Router();
 
-boardgameRouter.route("/boardgames").get(getAllBoardGames);
-boardgameRouter.route("/boardgames/:id").get(getBoardGameById);
-boardgameRouter.route("/boardgames/:id/genres").get(getGenresGame);
+boardgameRouter.use(authMiddleware); //только для авторизованных пользователей
+
+boardgameRouter.route("/").get(getAllBoardGames);
+boardgameRouter.route("/:id").get(getBoardGameById);
+boardgameRouter.route("/:id/genres").get(getGenresGame);
 
 export default boardgameRouter;

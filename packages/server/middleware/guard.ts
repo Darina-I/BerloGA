@@ -7,19 +7,17 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    return res.status(401).json({ message: "Требуется заголовок авторизации" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
   try {
+    const token = req.cookies.access_token;
+
+    if (!token) {
+      return res.status(401).json({ message: "Требуется авторизация" });
+    }
+
     const user = verifyAccessToken(token);
     req.user = { userId: user.userId };
     next();
   } catch (error) {
-    res.status(401).json({ message: (error as Error).message });
+    res.status(401).json({ message: "Недействительный токен" });
   }
 };

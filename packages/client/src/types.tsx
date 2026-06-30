@@ -1,7 +1,10 @@
 export interface BoardGameItemProps {
   id: number;
   name: string;
-  genres: string[];
+  genres: {
+    id: number;
+    name: string;
+  }[];
   time?: string;
   photo: string;
   rating: number;
@@ -13,6 +16,13 @@ export interface BoardGameItemProps {
   pdf?: string;
 }
 
+export interface LibraryGamesProps {
+  id: number;
+  game: BoardGameItemProps;
+  rate: string;
+}
+
 export interface BoardGamesProps {
   list: BoardGameItemProps[];
+  isLibrary?: boolean;
 }

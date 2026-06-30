@@ -55,6 +55,7 @@ export const login = async (req: Request, res: Response) => {
         },
       ],
     });
+
     if (!user) {
       return res.status(401).json({ message: "Неверный никнейм или пароль" });
     }
@@ -65,6 +66,20 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const tokens = generateTokens({ userId: user.id });
+
+    res.cookie("access_token", tokens.accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax", // Отправляй эту куку на сервер только в безопасных ситуациях, но не в подозрительных межсайтовых запросах
+      maxAge: 15 * 60 * 1000, // 15 min
+    });
+
+    res.cookie("refresh_token", tokens.refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     res.json({
       message: "Авторизация успешна",
@@ -77,7 +92,6 @@ export const login = async (req: Request, res: Response) => {
         is_show_city: user.is_show_city,
         role: user.role,
       },
-      tokens,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -87,16 +101,33 @@ export const login = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refresh_token;
 
     if (!refreshToken) {
-      return res.status(400).json({ message: "Refrash token обязателен" });
+      return res.status(400).json({ message: "Refresh token обязателен" });
     }
 
-    const result = await refreshAccessToken(refreshToken);
+    const { newAccessToken } = await refreshAccessToken(refreshToken);
 
-    res.json(result);
+    res.cookie("access_token", newAccessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000, // 15 min
+    });
+
+    res.json({ message: "Access token обновлен" });
   } catch (error) {
-    res.status(500).json({ message: "Ошибка сервера" });
+    res.status(500).json({ message: "Invalid refresh token" });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("access_token");
+    res.clearCookie("refresh_token");
+    res.json({ message: "Вы вышли из системы" });
+  } catch (error) {
+    res.status(500).json({ message: "Ошибка при выходе из системы" });
   }
 };

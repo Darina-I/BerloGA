@@ -9,10 +9,8 @@ interface BoardGameWithAssociations extends BoardGame {
     id: number;
     name: string;
   } | null;
-  genresgame: Array<{
-    genre: {
-      name: string;
-    };
+  genres: Array<{
+    name: string;
   }> | null;
 }
 
@@ -30,16 +28,11 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
           attributes: ["id", "name"],
         },
         {
-          model: GenreGame,
-          as: "genresgame",
-          attributes: ["id"],
-          include: [
-            {
-              model: Genre,
-              as: "genre",
-              attributes: ["name"],
-            },
-          ],
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] },
+          attributes: ["id", "name"],
+          required: false,
         },
       ],
     })) as BoardGameWithAssociations[];
@@ -48,7 +41,6 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
       return {
         ...game.get({ plain: true }),
         maker: game.maker ? { id: game.maker.id, name: game.maker.name } : null,
-        genres: game.genresgame?.map((gg) => gg.genre.name) || [],
       };
     });
 
@@ -75,16 +67,11 @@ export const getBoardGameById = async (req: Request, res: Response) => {
           attributes: ["id", "name"],
         },
         {
-          model: GenreGame,
-          as: "genresgame",
-          attributes: ["id"],
-          include: [
-            {
-              model: Genre,
-              as: "genre",
-              attributes: ["name"],
-            },
-          ],
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] },
+          attributes: ["id", "name"],
+          required: false,
         },
       ],
     })) as BoardGameWithAssociations;
@@ -98,7 +85,6 @@ export const getBoardGameById = async (req: Request, res: Response) => {
       maker: boardgame.maker
         ? { id: boardgame.maker.id, name: boardgame.maker.name }
         : null,
-      genres: boardgame.genresgame?.map((gg) => gg.genre.name) || [],
     };
 
     res.json(formattedGame);

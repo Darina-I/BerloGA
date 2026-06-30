@@ -28,7 +28,7 @@ export const verifyAccessToken = (token: string) => {
   }
 };
 
-export const verifyRefreshToken = (token: string) => {
+const verifyRefreshToken = (token: string) => {
   try {
     return jwt.verify(token, JWT_SECRET_KEY) as JWTPayload;
   } catch (error) {

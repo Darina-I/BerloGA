@@ -15,15 +15,11 @@ interface User {
 interface UserState {
   user: User | null;
   isAuth: boolean;
-  accessToken: string | null;
-  refreshToken: string | null;
 }
 
 const initialState: UserState = {
   user: null,
   isAuth: false,
-  accessToken: null,
-  refreshToken: null,
 };
 
 const userSlice = createSlice({
@@ -34,26 +30,17 @@ const userSlice = createSlice({
       state,
       action: PayloadAction<{
         user: User;
-        accessToken: string;
-        refreshToken: string;
       }>,
     ) => {
       state.user = action.payload.user;
       state.isAuth = true;
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
     },
     logout: (state) => {
       state.user = null;
       state.isAuth = false;
-      state.accessToken = null;
-      state.refreshToken = null;
-    },
-    updateAccessToken: (state, action: PayloadAction<string>) => {
-      state.accessToken = action.payload;
     },
   },
 });
 
-export const { setUser, logout, updateAccessToken } = userSlice.actions;
+export const { setUser, logout } = userSlice.actions;
 export default userSlice.reducer;
