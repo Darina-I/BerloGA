@@ -32,7 +32,7 @@ Library.init(
       onDelete: "CASCADE",
     },
     rate: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(2, 1),
       allowNull: false,
     },
   },

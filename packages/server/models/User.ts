@@ -8,11 +8,20 @@ interface UserAttributes {
   city_id?: number;
   password: string;
   social_network?: string;
-  is_show_city: boolean;
+  is_show_city?: boolean;
   role: "admin" | "user";
 }
 
-class User extends Model<UserAttributes> {}
+class User extends Model<UserAttributes> {
+  declare id: number;
+  declare nickname: string;
+  declare email?: string;
+  declare city?: Record<string, string | number>;
+  declare password: string;
+  declare social_network?: string;
+  declare is_show_city?: boolean;
+  declare role: "admin" | "user";
+}
 
 User.init(
   {

@@ -6,5 +6,20 @@ import search from "./search.svg";
 import person from "./person.svg";
 import time from "./time.svg";
 import edit from "./edit.svg";
+import arrow from "./arrow.svg";
+import check from "./check.svg";
+import cross from "./cross.svg";
 
-export { logo, library, subscription, location, search, person, time, edit };
+export {
+  logo,
+  library,
+  subscription,
+  location,
+  search,
+  person,
+  time,
+  edit,
+  arrow,
+  check,
+  cross,
+};

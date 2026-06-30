@@ -1,13 +1,27 @@
+import { useEffect, useState } from "react";
 import BoardGames from "../components/organisms/BoardGames";
-import { boardgames } from "../constants/boardgames";
 import Profile from "../components/organisms/Profile";
+import { libraryAPI } from "../api/userAPI";
 
 const LibraryPage = () => {
+  const [library, setLibrary] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await libraryAPI.getLibrary();
+        setLibrary(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке библиотеки: ", error);
+      }
+    })();
+  }, []);
+
   return (
     <div>
       <p className="font-bold my-3 text-xl text-center">Моя библиотека</p>
       <Profile />
-      <BoardGames list={boardgames} />
+      <BoardGames list={library} isLibrary />
     </div>
   );
 };

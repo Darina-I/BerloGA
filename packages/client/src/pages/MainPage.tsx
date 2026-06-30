@@ -7,11 +7,9 @@ const MainPage = () => {
   const [games, setGames] = useState<BoardGameItemProps[]>([]);
 
   useEffect(() => {
-    console.log("here");
     (async () => {
       try {
         const data = await boardGameApi.getAll();
-        console.log(data);
         setGames(data);
       } catch (error) {
         console.error("Ошибка при загрузке настольных игр: ", error);

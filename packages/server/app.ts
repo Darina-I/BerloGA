@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
 import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import { sequelize } from "./db";
 import "./models";
 import "./models/associations";
-
-//роутеры
 
 import blockCommentRouter from "./routes/blockComment";
 import boardgameRouter from "./routes/boardgame";
@@ -16,13 +15,21 @@ import genreRouter from "./routes/genre";
 import makerRouter from "./routes/maker";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
+app.use(cookieParser());
 
 async function initializeApp() {
   try {
@@ -42,13 +49,14 @@ app.get("/api/health", (req, res) => {
 
 //подключение роутов
 app.use("/api", blockCommentRouter);
-app.use("/api", boardgameRouter);
-app.use("/api", cityRouter);
-app.use("/api", commentRouter);
-app.use("/api", complaintRouter);
-app.use("/api", genreRouter);
-app.use("/api", makerRouter);
-app.use("/api", requestRouter);
-app.use("/api", userRouter);
+app.use("/api/boardgames", boardgameRouter);
+app.use("/api/cities", cityRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/complaints", complaintRouter);
+app.use("/api/genres", genreRouter);
+app.use("/api/makers", makerRouter);
+app.use("/api/requests", requestRouter);
+app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
 
 export default app;
