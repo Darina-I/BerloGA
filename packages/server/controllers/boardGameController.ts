@@ -3,6 +3,8 @@ import BoardGame from "../models/BoardGame";
 import Maker from "../models/Maker";
 import Genre from "../models/Genre";
 import GenreGame from "../models/GenreGame";
+import { sequelize } from "../db";
+import Library from "../models/Library";
 
 interface BoardGameWithAssociations extends BoardGame {
   maker: {
@@ -12,6 +14,9 @@ interface BoardGameWithAssociations extends BoardGame {
   genres: Array<{
     name: string;
   }> | null;
+  libraries?: Array<{
+    id: number;
+  }>;
 }
 
 interface GenreGameWithAssociations extends GenreGame {
@@ -21,6 +26,23 @@ interface GenreGameWithAssociations extends GenreGame {
 export const getAllBoardGames = async (req: Request, res: Response) => {
   try {
     const boardgames = (await BoardGame.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+              COALESCE(
+                (
+                  SELECT ROUND(AVG(l.rate))
+                  FROM libraries l
+                  WHERE l.game_id = "BoardGame".id
+                ),
+                0
+              )
+            `),
+            "rating",
+          ],
+        ],
+      },
       include: [
         {
           model: Maker,
@@ -34,17 +56,16 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
           attributes: ["id", "name"],
           required: false,
         },
+        {
+          model: Library,
+          as: "libraries",
+          attributes: ["id"],
+          required: false,
+        },
       ],
     })) as BoardGameWithAssociations[];
 
-    const formattedGames = boardgames.map((game) => {
-      return {
-        ...game.get({ plain: true }),
-        maker: game.maker ? { id: game.maker.id, name: game.maker.name } : null,
-      };
-    });
-
-    res.json(formattedGames);
+    res.json(boardgames);
   } catch (error) {
     console.error("Ошибка при получении настольных игр:", error);
     res.status(500).json({ error: (error as Error).message });

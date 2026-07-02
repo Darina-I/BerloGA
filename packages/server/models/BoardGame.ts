@@ -6,7 +6,6 @@ interface BoardGameAttributes {
   name: string;
   time?: string;
   photo: string;
-  rating?: number;
   content: string;
   age?: number;
   min_number_players?: number;
@@ -32,10 +31,6 @@ BoardGame.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    rating: {
-      type: DataTypes.DECIMAL(2, 1),
-      allowNull: true,
     },
     content: {
       type: DataTypes.TEXT,
