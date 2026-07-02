@@ -81,6 +81,23 @@ export const getBoardGameById = async (req: Request, res: Response) => {
     }
 
     const boardgame = (await BoardGame.findByPk(gameId, {
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+              COALESCE(
+                (
+                  SELECT ROUND(AVG(l.rate))
+                  FROM libraries l
+                  WHERE l.game_id = "BoardGame".id
+                ),
+                0
+              )
+            `),
+            "rating",
+          ],
+        ],
+      },
       include: [
         {
           model: Maker,
@@ -94,6 +111,12 @@ export const getBoardGameById = async (req: Request, res: Response) => {
           attributes: ["id", "name"],
           required: false,
         },
+        {
+          model: Library,
+          as: "libraries",
+          attributes: ["id"],
+          required: false,
+        },
       ],
     })) as BoardGameWithAssociations;
 
@@ -101,14 +124,7 @@ export const getBoardGameById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Игра не найдена" });
     }
 
-    const formattedGame = {
-      ...boardgame.get({ plain: true }),
-      maker: boardgame.maker
-        ? { id: boardgame.maker.id, name: boardgame.maker.name }
-        : null,
-    };
-
-    res.json(formattedGame);
+    res.json(boardgame);
   } catch (error) {
     console.error("Ошибка при получении настольной игры по ID:", error);
     res.status(500).json({ error: (error as Error).message });

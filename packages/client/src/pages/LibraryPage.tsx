@@ -7,14 +7,16 @@ const LibraryPage = () => {
   const [library, setLibrary] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    const fetchLibrary = async () => {
       try {
         const data = await libraryAPI.getLibrary();
         setLibrary(data);
       } catch (error) {
         console.error("Ошибка при загрузке библиотеки: ", error);
       }
-    })();
+    };
+
+    fetchLibrary();
   }, []);
 
   return (
