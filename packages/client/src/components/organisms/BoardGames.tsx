@@ -1,4 +1,4 @@
-import type { BoardGamesProps } from "../../types";
+import type { BoardGamesProps } from "../../types/boardgame.types";
 import BoardgameCard from "../molecules/BoardGameCard";
 import Search from "../molecules/Search";
 

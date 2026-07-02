@@ -1,4 +1,4 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
@@ -15,11 +15,13 @@ interface User {
 interface UserState {
   user: User | null;
   isAuth: boolean;
+  favouriteGameIds: number[];
 }
 
 const initialState: UserState = {
   user: null,
   isAuth: false,
+  favouriteGameIds: [],
 };
 
 const userSlice = createSlice({
@@ -35,6 +37,9 @@ const userSlice = createSlice({
       state.user = action.payload.user;
       state.isAuth = true;
     },
+    setFavourite: (state, action: PayloadAction<number[]>) => {
+      state.favouriteGameIds = action.payload;
+    },
     logout: (state) => {
       state.user = null;
       state.isAuth = false;
@@ -42,5 +47,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
+export const { setUser, setFavourite, logout } = userSlice.actions;
 export default userSlice.reducer;

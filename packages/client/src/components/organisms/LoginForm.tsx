@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { authAPI } from "../../api/authAPI";
 import { setUser } from "../../store/userSlice";
+import { loadFavouritesGameIds } from "../../utils/loadFavouriteGameIds";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -54,6 +55,9 @@ const LoginForm = () => {
             user: result.user,
           }),
         );
+
+        await loadFavouritesGameIds(dispatch);
+
         navigate("/");
       } catch (error) {
         setError("Ошибка авторизации");

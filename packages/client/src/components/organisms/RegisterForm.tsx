@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 import Link from "../atoms/Link";
 import { authAPI } from "../../api/authAPI";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { loadFavouritesGameIds } from "../../utils/loadFavouriteGameIds";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -18,7 +19,9 @@ const RegisterForm = () => {
   });
   const [error, setError] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -63,10 +66,10 @@ const RegisterForm = () => {
         dispatch(
           setUser({
             user: result.user,
-            accessToken: result.tokens.accessToken,
-            refreshToken: result.tokens.refreshToken,
           }),
         );
+
+        await loadFavouritesGameIds(dispatch);
 
         navigate("/");
       } catch (error) {

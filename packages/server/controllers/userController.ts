@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { sequelize } from "../db";
 import Library from "../models/Library";
 import BoardGame from "../models/BoardGame";
 import Genre from "../models/Genre";
@@ -14,7 +15,7 @@ interface AuthRequest extends Request {
 export const getMe = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
-      return res.status(500).json({ error: "Middleware не сработал" });
+      return res.status(500).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -49,7 +50,7 @@ export const getMe = async (req: AuthRequest, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Ошибка при получании пользователя", error);
+    console.error("Ошибка при получении пользователя", error);
     res.status(500).json({ error: (error as Error).message });
   }
 };
@@ -96,6 +97,8 @@ export const putUser = async (req: AuthRequest, res: Response) => {
   }
 };
 
+//БИБЛИОТЕКА
+
 export const getLibrary = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
@@ -135,6 +138,78 @@ export const getLibrary = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+export const postGameToLibrary = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+
+    const gameId = parseInt(req.params.gameId as string, 10);
+
+    if (!gameId) {
+      return res.status(400).json({ error: "ID игры не указан" });
+    }
+    const { rate } = req.body;
+
+    if (typeof rate !== "number" || rate < 1 || rate > 5) {
+      return res
+        .status(400)
+        .json({ error: "Оценка должна быть числом от 1 до 5" });
+    }
+    const newFavouriteGame = await Library.create({
+      user_id: currentUserId,
+      game_id: gameId,
+      rate: rate,
+    });
+
+    res.status(201).json(newFavouriteGame);
+  } catch (error) {
+    console.error("Ошибка при добавление настольной игры в библиотеку:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const deleteGameLibrary = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+
+    const gameId = parseInt(req.params.gameId as string, 10);
+
+    if (!gameId) {
+      return res.status(400).json({ error: "ID игры не указан" });
+    }
+
+    const libraryGame = await Library.findOne({
+      where: {
+        user_id: currentUserId,
+        game_id: gameId,
+      },
+    });
+
+    if (!libraryGame) {
+      return res.status(404).json({
+        error: "Игра в библиотеке не найден",
+      });
+    }
+
+    await libraryGame.destroy();
+    res.status(200).json({
+      message: "Игра удалена из библиотеки",
+    });
+  } catch (error) {
+    console.error("Ошибка при удалении настольной игры из библиотеку:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+//ЛЮБИМЫЕ ЖАНРЫ ПОЛЬЗОВАТЕЛЯ
 
 interface FavouriteGenreWithAssociation extends FavouriteGenre {
   genre: {

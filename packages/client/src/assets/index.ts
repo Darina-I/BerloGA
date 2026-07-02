@@ -9,6 +9,8 @@ import edit from "./edit.svg";
 import arrow from "./arrow.svg";
 import check from "./check.svg";
 import cross from "./cross.svg";
+import heartLine from "./line-heart.svg";
+import heartFull from "./heart-full.svg";
 
 export {
   logo,
@@ -22,4 +24,6 @@ export {
   arrow,
   check,
   cross,
+  heartLine,
+  heartFull,
 };

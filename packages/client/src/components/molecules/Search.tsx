@@ -5,7 +5,7 @@ import Input from "../atoms/Input";
 const Search = () => {
   return (
     <form className="flex gap-3 mt-10">
-      <Input placeholder="Поиск" />
+      <Input placeholder="Поиск" name="search" />
       <Button content={search} isIconButton />
     </form>
   );
