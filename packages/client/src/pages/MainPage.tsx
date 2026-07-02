@@ -1,7 +1,7 @@
 import BoardGames from "../components/organisms/BoardGames";
 import { useEffect, useState } from "react";
 import { boardGameApi } from "../api/boardGameAPI";
-import type { BoardGameItemProps } from "../types";
+import type { BoardGameItemProps } from "../types/boardgame.types";
 
 const MainPage = () => {
   const [games, setGames] = useState<BoardGameItemProps[]>([]);
