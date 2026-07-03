@@ -1,12 +1,52 @@
+import { useEffect, useState } from "react";
 import { search } from "../../assets";
+import type {
+  BoardGameItemProps,
+  LibraryGamesProps,
+} from "../../types/boardgame.types";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 
-const Search = () => {
+interface SearchProps {
+  oldList: BoardGameItemProps[];
+  setList: React.Dispatch<React.SetStateAction<BoardGameItemProps[]>>;
+  getValue: (item: BoardGameItemProps | LibraryGamesProps) => string;
+}
+
+const Search = ({ oldList, setList, getValue }: SearchProps) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    if (!searchValue.trim()) {
+      setList(oldList);
+      return;
+    }
+
+    const lowerSearch = searchValue.toLowerCase();
+    const filtered = oldList.filter((item) => {
+      const value = getValue(item);
+      if (typeof value === "string") {
+        return value.toLowerCase().includes(lowerSearch);
+      }
+    });
+
+    setList(filtered);
+  }, [searchValue, oldList]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setSearchValue(e.target.value);
+  };
+
   return (
     <form className="flex gap-3 mt-10">
-      <Input placeholder="Поиск" name="search" />
-      <Button content={search} isIconButton />
+      <Input
+        placeholder="Поиск"
+        name="search"
+        value={searchValue}
+        onChange={handleChange}
+      />
     </form>
   );
 };
