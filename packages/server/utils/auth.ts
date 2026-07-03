@@ -2,20 +2,18 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import "dotenv/config";
 
 const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY!;
-const ACCESS_TOKEN_LIFE: string = process.env.JWT_ACCESS_TOKEN_LIFE || "15m";
-const REFRESH_TOKEN_LIFE: string = process.env.JWT_REFRESH_TOKEN_LIFE || "7d";
 
 interface JWTPayload {
   userId: number;
 }
-export const generateTokens = (payload: JWTPayload) => {
-  const accessToken: string = jwt.sign(payload, JWT_SECRET_KEY, {
-    expiresIn: ACCESS_TOKEN_LIFE,
-  } as SignOptions);
 
-  const refreshToken: string = jwt.sign(payload, JWT_SECRET_KEY, {
-    expiresIn: REFRESH_TOKEN_LIFE,
-  } as SignOptions);
+export const generateTokens = (payload: JWTPayload) => {
+  if (typeof payload.userId !== "number" || Number.isNaN(payload.userId)) {
+    throw new Error("generateTokens: payload.userId must be a valid number");
+  }
+  const accessToken: string = jwt.sign(payload, JWT_SECRET_KEY);
+
+  const refreshToken: string = jwt.sign(payload, JWT_SECRET_KEY);
 
   return { accessToken, refreshToken };
 };
