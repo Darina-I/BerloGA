@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs";
 import { generateTokens, refreshAccessToken } from "../utils/auth";
 import City from "../models/City";
 
+const ACCESS_TOKEN_LIFE: number = 15 * 60 * 1000;
+const REFRESH_TOKEN_LIFE: number = 7 * 24 * 60 * 60 * 1000;
+
 export const register = async (req: Request, res: Response) => {
   try {
     const { nickname, password } = req.body;
@@ -71,14 +74,14 @@ export const login = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax", // Отправляй эту куку на сервер только в безопасных ситуациях, но не в подозрительных межсайтовых запросах
-      maxAge: 15 * 60 * 1000, // 15 min
+      maxAge: ACCESS_TOKEN_LIFE, // 15 min
     });
 
     res.cookie("refresh_token", tokens.refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: REFRESH_TOKEN_LIFE, // 7 days
     });
 
     res.json({
@@ -113,11 +116,12 @@ export const refresh = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000, // 15 min
+      maxAge: ACCESS_TOKEN_LIFE,
     });
 
     res.json({ message: "Access token обновлен" });
   } catch (error) {
+    console.log("Refresh error", error);
     res.status(500).json({ message: "Invalid refresh token" });
   }
 };
