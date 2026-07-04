@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
+import { Op, WhereOptions } from "sequelize";
 import BoardGame from "../models/BoardGame";
 import Maker from "../models/Maker";
 import Genre from "../models/Genre";
 import GenreGame from "../models/GenreGame";
 import { sequelize } from "../db";
 import Library from "../models/Library";
+import { parseNumberArray } from "../utils/parseNumberArray";
 
 interface BoardGameWithAssociations extends BoardGame {
   maker: {
@@ -25,6 +27,15 @@ interface GenreGameWithAssociations extends GenreGame {
 
 export const getAllBoardGames = async (req: Request, res: Response) => {
   try {
+    const genresIds = parseNumberArray(req.query["genres[]"] as string[]) || [];
+
+    const where: WhereOptions = {};
+    if (genresIds.length > 0) {
+      where["$genres.id$"] = { [Op.in]: genresIds };
+    }
+
+    const genresRequired = genresIds.length > 0;
+
     const boardgames = (await BoardGame.findAll({
       attributes: {
         include: [
@@ -43,6 +54,7 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
           ],
         ],
       },
+      where,
       include: [
         {
           model: Maker,
@@ -54,7 +66,7 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
           as: "genres",
           through: { attributes: [] },
           attributes: ["id", "name"],
-          required: false,
+          required: genresRequired,
         },
         {
           model: Library,

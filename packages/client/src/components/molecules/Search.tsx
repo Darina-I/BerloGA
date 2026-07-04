@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { search } from "../../assets";
 import type {
   BoardGameItemProps,
   LibraryGamesProps,
 } from "../../types/boardgame.types";
-import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 
 interface SearchProps {
@@ -40,7 +38,7 @@ const Search = ({ oldList, setList, getValue }: SearchProps) => {
   };
 
   return (
-    <form className="flex gap-3 mt-10">
+    <form className="flex gap-3 mt-4">
       <Input
         placeholder="Поиск"
         name="search"
