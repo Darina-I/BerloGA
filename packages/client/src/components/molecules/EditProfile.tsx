@@ -4,12 +4,12 @@ import type { RootState } from "../../store";
 import { cityApi } from "../../api/cityAPI";
 import Input from "../atoms/Input";
 import Select from "../atoms/Select";
-import { check } from "../../assets";
 import Button from "../atoms/Button";
 import { genreApi } from "../../api/genreAPI";
 import { profileAPI } from "../../api/userAPI";
 import type { UpdateUser } from "../../types/user.types";
 import { setUser } from "../../store/userSlice";
+import Checkbox from "../atoms/Checkbox";
 
 interface EditProfileProps {
   closeEdit: () => void;
@@ -102,19 +102,12 @@ const EditProfile = ({ closeEdit }: EditProfileProps) => {
             />
 
             <div>
-              <label className="flex gap-3 items-center">
-                <input
-                  name="is_show_city"
-                  type="checkbox"
-                  checked={newUser.is_show_city}
-                  onChange={handleChangeCheckbox}
-                  className="opacity-0 w-0 h-0 absolute"
-                />
-                <div className="w-7 h-7 border border-main-color rounded-lg cursor-pointer">
-                  {newUser.is_show_city && <img src={check} />}
-                </div>
-                <p>Другие пользователи видят ваш город</p>
-              </label>
+              <Checkbox
+                name="is_name_city"
+                checked={newUser.is_show_city || false}
+                onChange={handleChangeCheckbox}
+                label="Другие пользователи видят ваш город"
+              />
             </div>
 
             <Input
