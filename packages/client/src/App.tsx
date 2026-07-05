@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Header from "./components/organisms/Header";
 import Sidebar from "./components/organisms/Sidebar";
 import MainPage from "./pages/MainPage";
@@ -7,11 +8,12 @@ import LibraryPage from "./pages/LibraryPage";
 import BoardGamePage from "./pages/BoardGamePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import { useSelector } from "react-redux";
 import type { RootState } from "./store";
+import AdminPage from "./pages/AdminPage";
 
 const App = () => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
+  const role = useSelector((state: RootState) => state.user.role);
 
   const ProtectedRoutes = () => {
     if (!isAuth) {
@@ -30,11 +32,11 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route element={<ProtectedRoutes />}>
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/boardgames" element={<MainPage />} />
                 <Route path="/boardgames/:gameId" element={<BoardGamePage />} />
                 <Route path="/library" element={<LibraryPage />} />
-                <Route path="/profile" element={""} />
                 <Route path="/following" element={""} />
                 <Route path="/users" element={""} />
               </Route>

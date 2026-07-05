@@ -14,12 +14,14 @@ interface User {
 
 interface UserState {
   user: User | null;
+  role: "user" | "admin";
   isAuth: boolean;
   favouriteGameIds: number[];
 }
 
 const initialState: UserState = {
   user: null,
+  role: "user",
   isAuth: false,
   favouriteGameIds: [],
 };
@@ -35,6 +37,7 @@ const userSlice = createSlice({
       }>,
     ) => {
       state.user = action.payload.user;
+      state.role = action.payload.user.role;
       state.isAuth = true;
     },
     setFavourite: (state, action: PayloadAction<number[]>) => {
@@ -42,7 +45,9 @@ const userSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
+      state.role = "user";
       state.isAuth = false;
+      state.favouriteGameIds = [];
     },
   },
 });

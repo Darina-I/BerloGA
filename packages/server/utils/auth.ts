@@ -5,6 +5,7 @@ const JWT_SECRET_KEY: string = process.env.JWT_SECRET_KEY!;
 
 interface JWTPayload {
   userId: number;
+  role: "admin" | "user";
 }
 
 export const generateTokens = (payload: JWTPayload) => {

@@ -6,7 +6,10 @@ interface GenreAttributes {
   name: string;
 }
 
-class Genre extends Model<GenreAttributes> {}
+class Genre extends Model<GenreAttributes> {
+  declare id: number;
+  declare name: string;
+}
 
 Genre.init(
   {

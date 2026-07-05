@@ -11,6 +11,7 @@ import check from "./check.svg";
 import cross from "./cross.svg";
 import heartLine from "./line-heart.svg";
 import heartFull from "./heart-full.svg";
+import diagram from "./diagram.svg";
 
 export {
   logo,
@@ -26,4 +27,5 @@ export {
   cross,
   heartLine,
   heartFull,
+  diagram,
 };

@@ -16,6 +16,7 @@ import makerRouter from "./routes/maker";
 import requestRouter from "./routes/request";
 import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
+import adminRouter from "./routes/admin";
 
 dotenv.config();
 
@@ -58,5 +59,6 @@ app.use("/api/makers", makerRouter);
 app.use("/api/requests", requestRouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 
 export default app;
