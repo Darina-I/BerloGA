@@ -31,7 +31,6 @@ const BarChartTopGames = () => {
     const fetchData = async () => {
       try {
         const data = await adminApi.getTopGames();
-        console.log(data);
         setAllStat(data);
         setData(data["topByLibrary"]);
       } catch (error) {

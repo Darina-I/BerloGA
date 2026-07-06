@@ -66,7 +66,7 @@ const BoardGameCard = ({
                 </div>
                 <div className="flex gap-1">
                   <img src={time} width={17} />
-                  <p>{game?.time}</p>
+                  <p>{game?.time} мин</p>
                 </div>
               </div>
               {game?.genres && <ListItems list={game.genres} />}

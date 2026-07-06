@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BoardGames from "../components/organisms/BoardGames";
 import Profile from "../components/organisms/Profile";
 import { libraryAPI } from "../api/userAPI";
+import CreateRequest from "../components/organisms/CreateRequest";
 
 const LibraryPage = () => {
   const [library, setLibrary] = useState([]);
@@ -22,8 +23,11 @@ const LibraryPage = () => {
   return (
     <div>
       <p className="font-bold my-3 text-xl text-center">Моя библиотека</p>
-      <Profile />
-      <BoardGames list={library} isLibrary />
+      <div className="space-y-5">
+        <Profile />
+        <CreateRequest />
+        <BoardGames list={library} isLibrary />
+      </div>
     </div>
   );
 };

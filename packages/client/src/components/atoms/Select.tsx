@@ -46,7 +46,7 @@ const Select = ({
   };
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative w-full">
       <div className={"flex flex-col"}>
         {label && <p className={"font-medium mb-1"}>{label}</p>}
         <div

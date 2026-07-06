@@ -15,9 +15,11 @@ const AdminPage = () => {
     }
   }, []);
   return (
-    <div className="mt-10 flex flex-wrap gap-3">
-      <BarChartsGenres />
-      <BarChartTopGames />
+    <div>
+      <div className="mt-10 flex flex-wrap gap-3 mb-10">
+        <BarChartsGenres />
+        <BarChartTopGames />
+      </div>
     </div>
   );
 };

@@ -27,3 +27,16 @@ export interface BoardGamesProps {
   list: BoardGameItemProps[];
   isLibrary?: boolean;
 }
+
+//как в БД
+export interface BoardGameAttributes {
+  name: string;
+  time?: string;
+  photo: string;
+  content: string;
+  age?: number;
+  min_number_players?: number;
+  max_number_players?: number;
+  maker_id?: number;
+  pdf?: string;
+}

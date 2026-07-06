@@ -1,16 +1,14 @@
 import express from "express";
-import Request from "../models/Request";
-import Subscription from "../models/Subscription";
+import { authMiddleware } from "../middleware/guard";
+import { checkAdmin } from "../middleware/checkAdmin";
+import { getAllRequests, patchRequest } from "../controllers/requestController";
 
 const requestRouter = express.Router();
 
-requestRouter.get("/requests", async (req, res) => {
-  try {
-    const requests = await Request.findAll();
-    res.json(requests);
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
-  }
-});
+requestRouter.use(authMiddleware);
+requestRouter.use(checkAdmin);
+
+requestRouter.route("/").get(getAllRequests);
+requestRouter.route("/:id").patch(patchRequest);
 
 export default requestRouter;

@@ -169,3 +169,16 @@ export const getGenresGame = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+export const postBoardGame = async (req: Request, res: Response) => {
+  try {
+    const newGame = req.body;
+
+    const newBoardGame = await BoardGame.create(newGame);
+
+    res.status(201).json(newBoardGame);
+  } catch (error) {
+    console.error("Ошибка при добавление настольной игры:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};

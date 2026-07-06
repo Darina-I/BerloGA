@@ -7,7 +7,7 @@ import Select from "../atoms/Select";
 import Button from "../atoms/Button";
 import { genreApi } from "../../api/genreAPI";
 import { profileAPI } from "../../api/userAPI";
-import type { UpdateUser } from "../../types/user.types";
+import type { User } from "../../types/user.types";
 import { setUser } from "../../store/userSlice";
 import Checkbox from "../atoms/Checkbox";
 
@@ -19,7 +19,7 @@ const EditProfile = ({ closeEdit }: EditProfileProps) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
   const [cities, setCities] = useState();
-  const [newUser, setNewUser] = useState<UpdateUser>({
+  const [newUser, setNewUser] = useState<User>({
     nickname: user?.nickname,
     email: user?.email,
     city_id: Number(user?.city?.id),

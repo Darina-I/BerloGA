@@ -2,9 +2,10 @@ import {
   USER_API_URL,
   USER_GENRE_API_URL,
   USER_LIBRARY_API_URL,
+  USER_REQUEST_API_URL,
 } from "./config";
 import api from "./client";
-import type { UpdateUser } from "../types/user.types";
+import type { User } from "../types/user.types";
 
 export const libraryAPI = {
   getLibrary: async () => {
@@ -24,7 +25,7 @@ export const libraryAPI = {
 };
 
 export const profileAPI = {
-  updateUser: async (data: UpdateUser) => {
+  updateUser: async (data: User) => {
     const response = await api.put(`${USER_API_URL}/me`, { data });
     return response.data;
   },
@@ -38,6 +39,13 @@ export const profileAPI = {
   },
   deleteFavouriteGenres: async (genreId: number) => {
     const response = await api.delete(`${USER_GENRE_API_URL}/${genreId}`);
+    return response.data;
+  },
+};
+
+export const requestMeApi = {
+  postRequest: async (data: { name: string; details: string }) => {
+    const response = await api.post(`${USER_REQUEST_API_URL}`, data);
     return response.data;
   },
 };

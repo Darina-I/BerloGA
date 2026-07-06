@@ -6,6 +6,7 @@ import {
   getUserGenres,
   postGameToLibrary,
   postUserGenre,
+  postUserRequest,
   putUser,
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware/guard";
@@ -24,5 +25,7 @@ userRouter
 
 userRouter.route("/me/genres").get(getUserGenres).post(postUserGenre);
 userRouter.route("/me/genres/:genreId").delete(deleteUserGenre);
+
+userRouter.route("/me/requests").post(postUserRequest);
 
 export default userRouter;

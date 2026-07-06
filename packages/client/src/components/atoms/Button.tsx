@@ -17,7 +17,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`p-2 bg-main-color rounded-lg cursor-pointer text-white ${className}`}
+      className={`p-2 bg-main-color rounded-lg cursor-pointer  ${className} text-white`}
       type={type}
       disabled={disabled}
       onClick={onClick}

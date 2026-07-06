@@ -60,5 +60,6 @@ app.use("/api/requests", requestRouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/requests", requestRouter);
 
 export default app;

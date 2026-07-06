@@ -12,6 +12,7 @@ import cross from "./cross.svg";
 import heartLine from "./line-heart.svg";
 import heartFull from "./heart-full.svg";
 import diagram from "./diagram.svg";
+import envelope from "./envelope.svg";
 
 export {
   logo,
@@ -28,4 +29,5 @@ export {
   heartLine,
   heartFull,
   diagram,
+  envelope,
 };
