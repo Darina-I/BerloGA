@@ -5,9 +5,16 @@ import {
   diagram,
   envelope,
   database,
+  house,
 } from "../assets/index";
 
 export const menu = [
+  {
+    id: 1,
+    title: "Главная",
+    link: "/",
+    icon: house,
+  },
   {
     id: 1,
     title: "Статистика",
@@ -37,14 +44,8 @@ export const menu = [
   },
   {
     id: 5,
-    title: "Мои подписки",
-    link: "/following",
-    icon: subscription,
-  },
-  {
-    id: 6,
-    title: "Поиск игроков",
+    title: "Пользователи",
     link: "/users",
-    icon: location,
+    icon: subscription,
   },
 ];

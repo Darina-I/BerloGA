@@ -12,6 +12,7 @@ import type { RootState } from "./store";
 import StatisticPage from "./pages/StatisticPage";
 import RequestPage from "./pages/RequestPage";
 import TablePage from "./pages/TablesPage";
+import UsersPage from "./pages/UsersPage";
 
 const App = () => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
@@ -41,8 +42,9 @@ const App = () => {
                 <Route path="/boardgames" element={<MainPage />} />
                 <Route path="/boardgames/:gameId" element={<BoardGamePage />} />
                 <Route path="/library" element={<LibraryPage />} />
+                <Route path="/library/:userId" element={<LibraryPage />} />
                 <Route path="/following" element={""} />
-                <Route path="/users" element={""} />
+                <Route path="/users" element={<UsersPage />} />
               </Route>
             </Routes>
           </main>

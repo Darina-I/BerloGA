@@ -7,9 +7,15 @@ interface ListItemsProps {
   }[];
   onDelete?: (...args: number[]) => void;
   isCanEdit?: boolean;
+  isCenter?: boolean;
 }
 
-const ListItems = ({ list, onDelete, isCanEdit = false }: ListItemsProps) => {
+const ListItems = ({
+  list,
+  onDelete,
+  isCanEdit = false,
+  isCenter = false,
+}: ListItemsProps) => {
   const handleDelete = (itemId: number) => {
     if (onDelete) {
       onDelete(itemId);
@@ -17,7 +23,7 @@ const ListItems = ({ list, onDelete, isCanEdit = false }: ListItemsProps) => {
   };
 
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className={`flex gap-2 flex-wrap ${isCenter && "justify-center"}`}>
       {list?.map((item) => (
         <div
           className={`bg-main-color text-white rounded-full  py-1.5 ${isCanEdit ? "flex gap-3 items-center pl-5 pr-3" : "px-5"}`}

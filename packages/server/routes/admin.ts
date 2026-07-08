@@ -1,6 +1,7 @@
 import express from "express";
 import { authMiddleware } from "../middleware/guard";
 import {
+  getAllUsers,
   getCountGamesByGenres,
   getTopGames,
 } from "../controllers/adminController";
@@ -13,5 +14,6 @@ adminRouter.use(checkAdmin);
 
 adminRouter.route("/countgames").get(getCountGamesByGenres);
 adminRouter.route("/topgames").get(getTopGames);
+adminRouter.route("/users").get(getAllUsers);
 
 export default adminRouter;
