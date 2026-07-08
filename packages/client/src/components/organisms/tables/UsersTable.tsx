@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { usersApi } from "../../../api/userAPI";
 import Button from "../../atoms/Button";
+import { adminApi } from "../../../api/adminAPI";
 
 interface UserAttributes {
   id: number;
@@ -21,7 +22,7 @@ const UsersTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const data = await usersApi.getAll();
+        const data = await adminApi.getAllUsers();
         setUsers(data);
       } catch (error) {
         console.error("Ошибка при загрузке городов: ", error);

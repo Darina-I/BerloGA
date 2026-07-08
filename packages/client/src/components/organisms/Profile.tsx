@@ -6,12 +6,28 @@ import ListItems from "../molecules/ListItems";
 import type { RootState } from "../../store";
 import { profileAPI } from "../../api/userAPI";
 import { EditGenre, EditProfile } from "../molecules/EditProfile";
+import type { ProfileUser } from "../../types/user.types";
+import type { Genre } from "../../types/models.types";
 
-const Profile = () => {
-  const user = useSelector((state: RootState) => state.user.user);
-  const [favouriteGenres, setFavouriteGenres] = useState();
+interface ProfileProps {
+  userInfo?: ProfileUser;
+}
+
+const Profile = ({ userInfo }: ProfileProps) => {
+  const userState = useSelector((state: RootState) => state.user);
+  const [user, setUser] = useState<ProfileUser>();
+  const isMe = !userInfo;
+  const [favouriteGenres, setFavouriteGenres] = useState<Genre[]>();
   const [isEdit, setIsEdit] = useState(false);
   const [updateGenres, setUpdateGenres] = useState(0);
+
+  useEffect(() => {
+    if (userInfo) {
+      setUser(userInfo);
+    } else {
+      setUser(userState?.user as ProfileUser);
+    }
+  }, [userInfo]);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -26,7 +42,11 @@ const Profile = () => {
       }
     };
 
-    fetchGenres();
+    if (userInfo) {
+      setFavouriteGenres(userInfo.genres);
+    } else {
+      fetchGenres();
+    }
   }, [updateGenres]);
 
   const handleDeleteGenre = async (genreId: number) => {
@@ -44,11 +64,17 @@ const Profile = () => {
 
   return (
     <div className="border-2 border-second-color rounded-lg p-5 space-y-5 relative">
-      <div className="absolute right-5">
-        {!isEdit && (
-          <Button content={edit} isIconButton onClick={() => setIsEdit(true)} />
-        )}
-      </div>
+      {isMe && (
+        <div className="absolute right-5">
+          {!isEdit && (
+            <Button
+              content={edit}
+              isIconButton
+              onClick={() => setIsEdit(true)}
+            />
+          )}
+        </div>
+      )}
       <div className="flex gap-10">
         {!isEdit ? (
           <>

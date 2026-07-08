@@ -97,16 +97,23 @@ FavouriteGenre.belongsTo(User, {
 });
 
 //связи таблицы Genre
-Genre.hasMany(FavouriteGenre, {
-  foreignKey: "genre_id",
-  as: "favouritegenres",
-});
+// Genre.hasMany(FavouriteGenre, {
+//   foreignKey: "genre_id",
+//   as: "favouritegenres",
+// });
 
 Genre.belongsToMany(BoardGame, {
   through: "genregames",
   as: "games",
   foreignKey: "genre_id",
   otherKey: "game_id",
+});
+
+Genre.belongsToMany(User, {
+  through: "favouritegenres",
+  as: "genres",
+  foreignKey: "genre_id",
+  otherKey: "user_id",
 });
 
 //связи таблицы GenreGame
@@ -168,14 +175,21 @@ User.hasMany(Complaint, {
   as: "complaints",
 });
 
-User.hasMany(FavouriteGenre, {
-  foreignKey: "user_id",
-  as: "favouritegenres",
-});
+// User.hasMany(FavouriteGenre, {
+//   foreignKey: "user_id",
+//   as: "favouritegenres",
+// });
 
 User.hasMany(Subscription, {
   foreignKey: "user_id",
   as: "subscriptions",
+});
+
+User.belongsToMany(Genre, {
+  through: "favouritegenres",
+  as: "genres",
+  foreignKey: "user_id",
+  otherKey: "genre_id",
 });
 
 //связи таблицы Subscription

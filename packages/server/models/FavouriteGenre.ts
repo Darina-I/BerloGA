@@ -2,7 +2,6 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
 
 interface FavouriteGenreAttributes {
-  id?: number;
   genre_id: number;
   user_id: number;
 }
@@ -14,6 +13,7 @@ FavouriteGenre.init(
     genre_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: "genres",
         key: "id",
@@ -24,6 +24,7 @@ FavouriteGenre.init(
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: "users",
         key: "id",

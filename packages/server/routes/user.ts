@@ -4,6 +4,7 @@ import {
   deleteUserGenre,
   getAllUsers,
   getLibrary,
+  getUserById,
   getUserGenres,
   patchUserRole,
   postGameToLibrary,
@@ -18,8 +19,9 @@ const userRouter = express.Router();
 
 userRouter.use(authMiddleware); //только для авторизованных пользователей
 
-userRouter.route("/").get(checkAdmin, getAllUsers);
-userRouter.route("/:id").patch(checkAdmin, patchUserRole);
+userRouter.route("/").get(getAllUsers);
+userRouter.route("/:id").get(getUserById).patch(checkAdmin, patchUserRole);
+userRouter.route("/:id/boardgames").get(getLibrary);
 
 userRouter.route("/me").put(putUser);
 

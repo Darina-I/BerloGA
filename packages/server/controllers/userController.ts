@@ -7,6 +7,7 @@ import FavouriteGenre from "../models/FavouriteGenre";
 import User from "../models/User";
 import City from "../models/City";
 import Request from "../models/Request";
+import { sequelize } from "../db";
 
 interface AuthRequest extends RequestExpress {
   user?: { userId: number };
@@ -15,15 +16,79 @@ interface AuthRequest extends RequestExpress {
 export const getAllUsers = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const users = await User.findAll({
       order: [["id", "DESC"]],
+      attributes: {
+        exclude: ["password", "role"],
+        include: [
+          [
+            sequelize.literal(`
+              COALESCE(
+                (
+                  SELECT COUNT(*)
+                  FROM libraries l
+                  WHERE l.user_id = "User".id
+                ),
+                0
+              )
+            `),
+            "game_count",
+          ],
+        ],
+      },
       include: [
         {
           model: City,
           as: "city",
+          attributes: ["id", "name"],
+        },
+        {
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] },
+          attributes: ["id", "name"],
+        },
+        {
+          model: Library,
+          as: "libraries",
+          attributes: [],
+        },
+      ],
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Ошибка при получении пользователей", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+export const getUserById = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Пользователь не авторизован" });
+    }
+
+    const id = parseInt(req.params.id as string, 10);
+
+    const users = await User.findOne({
+      where: { id: id },
+      order: [["id", "DESC"]],
+      attributes: {
+        exclude: ["password", "role"],
+      },
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["id", "name"],
+        },
+        {
+          model: Genre,
+          as: "genres",
+          through: { attributes: [] },
           attributes: ["id", "name"],
         },
       ],
@@ -39,7 +104,7 @@ export const getAllUsers = async (req: AuthRequest, res: Response) => {
 export const patchUserRole = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const { role } = req.body;
@@ -63,7 +128,7 @@ export const patchUserRole = async (req: AuthRequest, res: Response) => {
 export const getMe = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -106,7 +171,7 @@ export const getMe = async (req: AuthRequest, res: Response) => {
 export const putUser = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -150,13 +215,15 @@ export const putUser = async (req: AuthRequest, res: Response) => {
 export const getLibrary = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
+    const id = parseInt(req.params.id as string, 10);
+    const userId = id ? id : currentUserId;
 
     const library = await Library.findAll({
-      where: { user_id: currentUserId },
+      where: { user_id: userId },
       attributes: ["id", "rate"],
       include: [
         {
@@ -190,7 +257,7 @@ export const getLibrary = async (req: AuthRequest, res: Response) => {
 export const postGameToLibrary = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -223,7 +290,7 @@ export const postGameToLibrary = async (req: AuthRequest, res: Response) => {
 export const deleteGameLibrary = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -269,7 +336,7 @@ interface FavouriteGenreWithAssociation extends FavouriteGenre {
 export const getUserGenres = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -285,6 +352,8 @@ export const getUserGenres = async (req: AuthRequest, res: Response) => {
       ],
     })) as FavouriteGenreWithAssociation[];
 
+    console.log(favourite);
+
     const genres = favourite.map((item) => item.genre);
 
     res.status(200).json(genres);
@@ -297,7 +366,7 @@ export const getUserGenres = async (req: AuthRequest, res: Response) => {
 export const postUserGenre = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -320,7 +389,7 @@ export const postUserGenre = async (req: AuthRequest, res: Response) => {
 export const deleteUserGenre = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
@@ -361,7 +430,7 @@ export const deleteUserGenre = async (req: AuthRequest, res: Response) => {
 export const postUserRequest = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.userId) {
-      return res.status(500).json({ error: "Пользователь не авторизован" });
+      return res.status(401).json({ error: "Пользователь не авторизован" });
     }
 
     const currentUserId = req.user.userId;
