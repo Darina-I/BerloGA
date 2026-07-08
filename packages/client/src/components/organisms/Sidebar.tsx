@@ -30,7 +30,7 @@ const Sidebar = () => {
                   width={30}
                   title={item.title}
                 />
-                {item.id < menu.length && (
+                {item.id < menu.length - 1 && (
                   <div className="border-b border-second-color" />
                 )}
               </div>

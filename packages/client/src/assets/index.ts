@@ -15,6 +15,7 @@ import diagram from "./diagram.svg";
 import envelope from "./envelope.svg";
 import database from "./database.svg";
 import trash from "./trash.svg";
+import house from "./house.svg";
 
 export {
   logo,
@@ -34,4 +35,5 @@ export {
   envelope,
   database,
   trash,
+  house,
 };
