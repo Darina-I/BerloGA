@@ -30,7 +30,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="mt-7">
+    <div className="mt-3">
       <Filter useFilter={handleFilter} />
       <BoardGames list={games} />
     </div>

@@ -46,7 +46,7 @@ const Select = ({
   };
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div ref={dropdownRef} className="relative w-full">
       <div className={"flex flex-col"}>
         {label && <p className={"font-medium mb-1"}>{label}</p>}
         <div
@@ -65,7 +65,7 @@ const Select = ({
         </div>
       </div>
       {isOpen && (
-        <div className="absolute border border-second-color mt-0.5 rounded-lg space-y-1 w-full bg-white z-100">
+        <div className="absolute border border-second-color mt-0.5 rounded-lg space-y-1 w-full bg-white z-100 max-h-48 overflow-y-auto">
           {list.map((item) => (
             <div
               key={item.id}

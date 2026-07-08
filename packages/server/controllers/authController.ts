@@ -26,7 +26,7 @@ export const register = async (req: Request, res: Response) => {
       role: "user",
     });
 
-    const tokens = generateTokens({ userId: user.id });
+    const tokens = generateTokens({ userId: user.id, role: user.role });
 
     res.status(201).json({
       message: "Пользователь успешно зарегистрирован",
@@ -68,13 +68,13 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Неверный никнейм или пароль" });
     }
 
-    const tokens = generateTokens({ userId: user.id });
+    const tokens = generateTokens({ userId: user.id, role: user.role });
 
     res.cookie("access_token", tokens.accessToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax", // Отправляй эту куку на сервер только в безопасных ситуациях, но не в подозрительных межсайтовых запросах
-      maxAge: ACCESS_TOKEN_LIFE, // 15 min
+      maxAge: ACCESS_TOKEN_LIFE,
     });
 
     res.cookie("refresh_token", tokens.refreshToken, {

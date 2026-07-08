@@ -5,7 +5,7 @@ interface RequestAttributes {
   id?: number;
   name: string;
   is_done: boolean;
-  user_id: string;
+  user_id: number;
   details?: string;
 }
 
@@ -33,7 +33,7 @@ Request.init(
       onDelete: "CASCADE",
     },
     details: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
   },

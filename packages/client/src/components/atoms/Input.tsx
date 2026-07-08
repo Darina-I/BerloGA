@@ -8,6 +8,7 @@ interface InputProps {
   value?: string;
   label?: string;
   isTextarea?: boolean;
+  rows?: number;
 }
 
 const Input = ({
@@ -18,11 +19,12 @@ const Input = ({
   value,
   label,
   isTextarea = false,
+  rows,
 }: InputProps) => {
   const Tag = isTextarea ? "textarea" : "input";
 
   return (
-    <>
+    <div className="w-full">
       {label && <p className="mb-1">{label}</p>}
       <Tag
         type={type}
@@ -31,8 +33,9 @@ const Input = ({
         className="bg-second-color w-full rounded-lg px-3 py-2"
         onChange={onChange}
         value={value}
+        {...(isTextarea && { rows })}
       />
-    </>
+    </div>
   );
 };
 

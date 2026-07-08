@@ -64,6 +64,7 @@ const LoginForm = () => {
       }
     }
   };
+
   return (
     <form className="flex flex-col gap-4 items-center" onSubmit={handleSubmit}>
       <Input

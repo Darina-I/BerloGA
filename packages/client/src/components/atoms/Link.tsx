@@ -3,13 +3,18 @@ import { useNavigate } from "react-router-dom";
 interface LinkProps {
   link: string;
   content: string;
+  isOut: boolean;
 }
 
-const Link = ({ link, content }: LinkProps) => {
+const Link = ({ link, content, isOut }: LinkProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(link);
+    if (!isOut) {
+      navigate(link);
+    } else {
+      window.open(link, "_blank");
+    }
   };
 
   return (

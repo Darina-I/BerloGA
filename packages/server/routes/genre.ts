@@ -10,6 +10,7 @@ const genreRouter = express.Router();
 
 genreRouter.use(authMiddleware); //только для авторизованных пользователей
 
-genreRouter.route("/").get(getAllGenre).post(postGenre).delete(deleteGenre);
+genreRouter.route("/").get(getAllGenre).post(postGenre);
+genreRouter.route("/:id").delete(deleteGenre);
 
 export default genreRouter;

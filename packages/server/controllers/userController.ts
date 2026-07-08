@@ -1,5 +1,4 @@
-import { Request, Response } from "express";
-import { sequelize } from "../db";
+import { Request as RequestExpress, Response } from "express";
 import Library from "../models/Library";
 import BoardGame from "../models/BoardGame";
 import Genre from "../models/Genre";
@@ -7,10 +6,59 @@ import Maker from "../models/Maker";
 import FavouriteGenre from "../models/FavouriteGenre";
 import User from "../models/User";
 import City from "../models/City";
+import Request from "../models/Request";
 
-interface AuthRequest extends Request {
+interface AuthRequest extends RequestExpress {
   user?: { userId: number };
 }
+
+export const getAllUsers = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const users = await User.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Ошибка при получении пользователей", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const patchUserRole = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const { role } = req.body;
+    const id = parseInt(req.params.id as string, 10);
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "Пользователь с таким ID не найден" });
+    }
+
+    await user.update({ role: role });
+    return res.json(user);
+  } catch (error) {
+    console.error("Ошибка при изменении роли пользователя", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
 
 export const getMe = async (req: AuthRequest, res: Response) => {
   try {
@@ -304,6 +352,33 @@ export const deleteUserGenre = async (req: AuthRequest, res: Response) => {
     console.error("Ошибка при удалении любимого жанра:", error);
     res.status(500).json({
       error: "Не удалось удалить любимый жанр",
+      details: (error as Error).message,
+    });
+  }
+};
+
+//ЗАПРОСЫ ПОЛЬЗОВАТЕЛЯ
+export const postUserRequest = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const currentUserId = req.user.userId;
+    const data = req.body;
+
+    const request = await Request.create({
+      name: data.name,
+      is_done: false,
+      user_id: currentUserId,
+      details: data.details,
+    });
+
+    res.status(201).json(request);
+  } catch (error) {
+    console.error("Ошибка при отправке запроса:", error);
+    res.status(500).json({
+      error: "Не удалось отправить запрос",
       details: (error as Error).message,
     });
   }

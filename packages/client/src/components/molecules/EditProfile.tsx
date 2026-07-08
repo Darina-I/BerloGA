@@ -7,7 +7,7 @@ import Select from "../atoms/Select";
 import Button from "../atoms/Button";
 import { genreApi } from "../../api/genreAPI";
 import { profileAPI } from "../../api/userAPI";
-import type { UpdateUser } from "../../types/user.types";
+import type { User } from "../../types/user.types";
 import { setUser } from "../../store/userSlice";
 import Checkbox from "../atoms/Checkbox";
 
@@ -19,7 +19,7 @@ const EditProfile = ({ closeEdit }: EditProfileProps) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
   const [cities, setCities] = useState();
-  const [newUser, setNewUser] = useState<UpdateUser>({
+  const [newUser, setNewUser] = useState<User>({
     nickname: user?.nickname,
     email: user?.email,
     city_id: Number(user?.city?.id),
@@ -141,14 +141,16 @@ const EditGenre = ({ updateGenre }: EditGenreProps) => {
   const [selectGenreId, setSelectGenreId] = useState<number>();
 
   useEffect(() => {
-    (async () => {
+    const fetchGenres = async () => {
       try {
         const data = await genreApi.getAll();
         setGenres(data);
       } catch (error) {
         console.error("Ошибка при загрузке городов: ", error);
       }
-    })();
+    };
+
+    fetchGenres();
   }, []);
 
   const handleChangeSelect = (itemId: number) => {

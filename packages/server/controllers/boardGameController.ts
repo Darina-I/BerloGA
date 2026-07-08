@@ -169,3 +169,88 @@ export const getGenresGame = async (req: Request, res: Response) => {
     res.status(500).json({ error: (error as Error).message });
   }
 };
+
+export const postBoardGame = async (req: Request, res: Response) => {
+  try {
+    const newGame = req.body;
+
+    const newBoardGame = await BoardGame.create(newGame);
+
+    res.status(201).json(newBoardGame);
+  } catch (error) {
+    console.error("Ошибка при добавление настольной игры:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const postGenreGame = async (req: Request, res: Response) => {
+  try {
+    const gameId = parseInt(req.params.id as string, 10);
+    const { genreId } = req.body;
+
+    if (isNaN(gameId) || isNaN(genreId)) {
+      return res.status(400).json({ error: "Некорректные ID" });
+    }
+
+    const [game, genre] = await Promise.all([
+      BoardGame.findByPk(gameId),
+      Genre.findByPk(genreId),
+    ]);
+
+    if (!game) {
+      return res.status(404).json({ error: "Игра не найдена" });
+    }
+    if (!genre) {
+      return res.status(404).json({ error: "Жанр не найден" });
+    }
+
+    const existing = await GenreGame.findOne({
+      where: {
+        game_id: gameId,
+        genre_id: genreId,
+      },
+    });
+
+    if (existing) {
+      return res.status(409).json({ error: "Этот жанр уже добавлен к игре" });
+    }
+
+    await GenreGame.create({
+      game_id: gameId,
+      genre_id: genreId,
+    });
+
+    return res.json({ success: true, message: "Жанр успешно добавлен к игре" });
+  } catch (error) {
+    console.error("Ошибка при добавлении жанра:", error);
+    return res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const deleteGenre = async (req: Request, res: Response) => {
+  try {
+    const gameId = parseInt(req.params.id as string, 10);
+    const genreId = parseInt(req.params.genreId as string, 10);
+
+    if (isNaN(gameId) || isNaN(genreId)) {
+      return res.status(400).json({ error: "Некорректные ID" });
+    }
+
+    const genregame = await GenreGame.findOne({
+      where: {
+        game_id: gameId,
+        genre_id: genreId,
+      },
+    });
+
+    if (!genregame) {
+      return res.status(400).json({ error: "Связь жанр-игра не найдена!" });
+    }
+
+    await genregame.destroy();
+    return res.json({ success: true, message: "Жанр удалён из игры" });
+  } catch (error) {
+    console.error("Ошибка при удалении жанра:", error);
+    return res.status(500).json({ error: (error as Error).message });
+  }
+};

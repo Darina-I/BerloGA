@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../atoms/Button";
 import { genreApi } from "../../api/genreAPI";
 import Checkbox from "../atoms/Checkbox";
-import type { Genre } from "../../types/genre.types";
+import type { Genre } from "../../types/models.types";
 
 interface FilterProps {
   useFilter: (genresIds: number[]) => void;
