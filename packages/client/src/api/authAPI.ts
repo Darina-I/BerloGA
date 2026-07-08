@@ -16,4 +16,8 @@ export const authAPI = {
     });
     return response.data;
   },
+  logout: async () => {
+    const response = await api.post(`${AUTH_API_URL}/logout`);
+    return response.data;
+  },
 };

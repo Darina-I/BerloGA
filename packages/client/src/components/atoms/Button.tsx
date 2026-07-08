@@ -5,6 +5,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: () => void;
+  withoutBG?: boolean;
 }
 
 const Button = ({
@@ -14,15 +15,16 @@ const Button = ({
   type = "button",
   disabled = false,
   onClick,
+  withoutBG = false,
 }: ButtonProps) => {
   return (
     <button
-      className={`p-2 bg-main-color rounded-lg cursor-pointer  ${className} text-white`}
+      className={` ${!withoutBG && "p-2 bg-main-color rounded-lg"}  cursor-pointer  ${className} text-white`}
       type={type}
       disabled={disabled}
       onClick={onClick}
     >
-      {isIconButton ? <img src={content} /> : content}
+      {isIconButton ? <img src={content} width={25} /> : content}
     </button>
   );
 };
