@@ -15,18 +15,6 @@ const Tabs = ({ list, handleClick, currentTab }: TabsProps) => {
           {item.label}
         </div>
       ))}
-      {/* <div
-          onClick={() => handleClick("topByLibrary")}
-          className="rounded-lg p-1 bg-second-color hover:bg-[#d9ad6a] cursor-pointer"
-        >
-          Топ 10 по кол-ву добавлений в библиотеку
-        </div>
-        <div
-          onClick={() => handleClick("topByRating")}
-          className="rounded-lg p-1 bg-second-color hover:bg-[#d9ad6a] cursor-pointer"
-        >
-          Топ 10 по рейтингу
-        </div> */}
     </div>
   );
 };
