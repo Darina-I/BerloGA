@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
-import ListRequest from "../components/organisms/ListRequest";
+import ListRequest from "../components/organisms/tables/ListRequest";
 import Button from "../components/atoms/Button";
 import AddBoardGame from "../components/organisms/AddBoardGame";
 

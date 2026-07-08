@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../atoms/Button";
 import Modal from "../molecules/Modal";
 import Input from "../atoms/Input";
 import { requestMeApi } from "../../api/userAPI";
+import MessageForUser from "../atoms/MessageForUser";
 
 const CreateRequest = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +14,19 @@ const CreateRequest = () => {
   const [error, setError] = useState<string>();
   const [isSuccess, setIsSuccess] = useState(false);
 
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    if (isSuccess) {
-      setIsSuccess(false);
-    }
     const isNumber = e.target.type === "number";
     setData({
       ...data,
@@ -72,10 +80,10 @@ const CreateRequest = () => {
               onChange={handleChange}
               rows={4}
             />
-            {error && <p className="text-red-600">{error}</p>}
+            {error && <MessageForUser content={error} isError />}
             <Button type="submit" content="Отправить" className="px-5" />
             {isSuccess && (
-              <p className="text-green-600">Запрос успешно отправлен!</p>
+              <MessageForUser content="Запрос успешно отправлен!" />
             )}
           </form>
         </Modal>

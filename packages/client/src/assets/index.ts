@@ -13,6 +13,8 @@ import heartLine from "./line-heart.svg";
 import heartFull from "./heart-full.svg";
 import diagram from "./diagram.svg";
 import envelope from "./envelope.svg";
+import database from "./database.svg";
+import trash from "./trash.svg";
 
 export {
   logo,
@@ -30,4 +32,6 @@ export {
   heartFull,
   diagram,
   envelope,
+  database,
+  trash,
 };

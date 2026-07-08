@@ -12,6 +12,54 @@ interface AuthRequest extends RequestExpress {
   user?: { userId: number };
 }
 
+export const getAllUsers = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const users = await User.findAll({
+      order: [["id", "DESC"]],
+      include: [
+        {
+          model: City,
+          as: "city",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Ошибка при получении пользователей", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const patchUserRole = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(500).json({ error: "Пользователь не авторизован" });
+    }
+
+    const { role } = req.body;
+    const id = parseInt(req.params.id as string, 10);
+
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "Пользователь с таким ID не найден" });
+    }
+
+    await user.update({ role: role });
+    return res.json(user);
+  } catch (error) {
+    console.error("Ошибка при изменении роли пользователя", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
 export const getMe = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {

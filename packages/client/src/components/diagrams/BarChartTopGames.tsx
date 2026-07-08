@@ -9,6 +9,7 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
+import Tabs from "../molecules/Tabs";
 
 interface TopGamesProps {
   id: number;
@@ -21,6 +22,8 @@ interface TopProps {
   topByLibrary: TopGamesProps[];
   topByRating: TopGamesProps[];
 }
+
+type TABS_TYPE = "topByLibrary" | "topByRating";
 
 const BarChartTopGames = () => {
   const [allStat, setAllStat] = useState<TopProps>();
@@ -41,14 +44,14 @@ const BarChartTopGames = () => {
     fetchData();
   }, []);
 
-  const handleClick = (stat: "topByLibrary" | "topByRating") => {
-    if (allStat) setData(allStat[stat]);
-    setCurrentStat(stat);
+  const handleClick = (type: string) => {
+    if (allStat) setData(allStat[type as TABS_TYPE]);
+    setCurrentStat(type);
   };
 
   return (
     <div className="flex-1 w-fit text-sm border rounded-lg p-3 border-main-color">
-      <div className="flex gap-2 justify-center">
+      {/* <div className="flex gap-2 justify-center">
         <div
           onClick={() => handleClick("topByLibrary")}
           className="rounded-lg p-1 bg-second-color hover:bg-[#d9ad6a] cursor-pointer"
@@ -61,7 +64,21 @@ const BarChartTopGames = () => {
         >
           Топ 10 по рейтингу
         </div>
-      </div>
+      </div> */}
+      <Tabs
+        list={[
+          {
+            name: "topByLibrary",
+            label: "Топ 10 по кол-ву добавлений в библиотеку",
+          },
+          {
+            name: "topByRating",
+            label: "Топ 10 по рейтингу",
+          },
+        ]}
+        handleClick={handleClick}
+        currentTab={currentStat}
+      />
       <ResponsiveContainer height={450}>
         <BarChart data={data} barSize={30} margin={{ bottom: 50, top: 10 }}>
           <CartesianGrid />

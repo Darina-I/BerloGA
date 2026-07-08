@@ -4,6 +4,7 @@ import {
   location,
   diagram,
   envelope,
+  database,
 } from "../assets/index";
 
 export const menu = [
@@ -23,18 +24,25 @@ export const menu = [
   },
   {
     id: 3,
+    title: "База данных",
+    link: "/tables",
+    icon: database,
+    role: "admin",
+  },
+  {
+    id: 4,
     title: "Моя библиотека",
     link: "/library",
     icon: library,
   },
   {
-    id: 4,
+    id: 5,
     title: "Мои подписки",
     link: "/following",
     icon: subscription,
   },
   {
-    id: 5,
+    id: 6,
     title: "Поиск игроков",
     link: "/users",
     icon: location,

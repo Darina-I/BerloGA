@@ -5,7 +5,7 @@ interface ListItemsProps {
     id: number;
     name: string;
   }[];
-  onDelete?: (itemId: number) => void;
+  onDelete?: (...args: number[]) => void;
   isCanEdit?: boolean;
 }
 
@@ -17,7 +17,7 @@ const ListItems = ({ list, onDelete, isCanEdit = false }: ListItemsProps) => {
   };
 
   return (
-    <div className="flex gap-2 flex-wrap text-sm">
+    <div className="flex gap-2 flex-wrap">
       {list?.map((item) => (
         <div
           className={`bg-main-color text-white rounded-full  py-1.5 ${isCanEdit ? "flex gap-3 items-center pl-5 pr-3" : "px-5"}`}

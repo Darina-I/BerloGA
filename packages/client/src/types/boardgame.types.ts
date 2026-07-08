@@ -12,7 +12,10 @@ export interface BoardGameItemProps {
   age?: number;
   min_number_players?: number;
   max_number_players?: number;
-  maker: string;
+  maker: {
+    id: number;
+    name: string;
+  };
   pdf?: string;
   isFavourite: boolean;
 }

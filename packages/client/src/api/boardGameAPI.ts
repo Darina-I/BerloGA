@@ -7,7 +7,7 @@ interface Filter {
 }
 
 export const boardGameApi = {
-  getAll: async (filter: Filter) => {
+  getAll: async (filter?: Filter) => {
     const response = await api.get(`${BOARDGAME_API_URL}`, {
       params: filter,
     });
@@ -20,6 +20,18 @@ export const boardGameApi = {
   getGenreById: (id: number) => api.get(`${BOARDGAME_API_URL}/${id}/genres`),
   postGame: async (data: BoardGameAttributes) => {
     const response = await api.post(`${BOARDGAME_API_URL}`, data);
+    return response.data;
+  },
+  postGenre: async (id: number, genreId: number) => {
+    const response = await api.post(`${BOARDGAME_API_URL}/${id}/genres`, {
+      genreId,
+    });
+    return response.data;
+  },
+  deleteGenre: async (id: number, genreId: number) => {
+    const response = await api.delete(
+      `${BOARDGAME_API_URL}/${id}/genres/${genreId}`,
+    );
     return response.data;
   },
 };

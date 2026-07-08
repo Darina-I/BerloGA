@@ -2,7 +2,6 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../db";
 
 interface GenreGameAttributes {
-  id?: number;
   genre_id: number;
   game_id: number;
 }
@@ -14,6 +13,7 @@ GenreGame.init(
     genre_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: "genres",
         key: "id",
@@ -24,6 +24,7 @@ GenreGame.init(
     game_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: "boardgames",
         key: "id",

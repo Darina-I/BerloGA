@@ -9,8 +9,9 @@ import BoardGamePage from "./pages/BoardGamePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import type { RootState } from "./store";
-import AdminPage from "./pages/AdminPage";
+import StatisticPage from "./pages/StatisticPage";
 import RequestPage from "./pages/RequestPage";
+import TablePage from "./pages/TablesPage";
 
 const App = () => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
@@ -33,8 +34,9 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route element={<ProtectedRoutes />}>
-                <Route path="/statistics" element={<AdminPage />} />
+                <Route path="/statistics" element={<StatisticPage />} />
                 <Route path="/requests" element={<RequestPage />} />
+                <Route path="/tables" element={<TablePage />} />
                 <Route path="/" element={<MainPage />} />
                 <Route path="/boardgames" element={<MainPage />} />
                 <Route path="/boardgames/:gameId" element={<BoardGamePage />} />

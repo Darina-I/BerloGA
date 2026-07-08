@@ -7,6 +7,17 @@ import {
 import api from "./client";
 import type { User } from "../types/user.types";
 
+export const usersApi = {
+  getAll: async () => {
+    const response = await api.get(`${USER_API_URL}`);
+    return response.data;
+  },
+  patchRole: async (id: number, role: "user" | "admin") => {
+    const response = await api.patch(`${USER_API_URL}/${id}`, { role });
+    return response.data;
+  },
+};
+
 export const libraryAPI = {
   getLibrary: async () => {
     const response = await api.get(`${USER_LIBRARY_API_URL}`);

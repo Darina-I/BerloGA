@@ -141,14 +141,16 @@ const EditGenre = ({ updateGenre }: EditGenreProps) => {
   const [selectGenreId, setSelectGenreId] = useState<number>();
 
   useEffect(() => {
-    (async () => {
+    const fetchGenres = async () => {
       try {
         const data = await genreApi.getAll();
         setGenres(data);
       } catch (error) {
         console.error("Ошибка при загрузке городов: ", error);
       }
-    })();
+    };
+
+    fetchGenres();
   }, []);
 
   const handleChangeSelect = (itemId: number) => {

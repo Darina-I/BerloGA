@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { requestApi } from "../../api/requestAPI";
-import type { User } from "../../types/user.types";
-import Button from "../atoms/Button";
+import { requestApi } from "../../../api/requestAPI";
+import type { User } from "../../../types/user.types";
+import Button from "../../atoms/Button";
 
 interface RequestAttributes {
   id: number;

@@ -65,7 +65,7 @@ const Select = ({
         </div>
       </div>
       {isOpen && (
-        <div className="absolute border border-second-color mt-0.5 rounded-lg space-y-1 w-full bg-white z-100">
+        <div className="absolute border border-second-color mt-0.5 rounded-lg space-y-1 w-full bg-white z-100 max-h-48 overflow-y-auto">
           {list.map((item) => (
             <div
               key={item.id}

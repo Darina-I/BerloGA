@@ -5,7 +5,7 @@ import type { RootState } from "../store";
 import BarChartsGenres from "../components/diagrams/BarChartGenres";
 import BarChartTopGames from "../components/diagrams/BarChartTopGames";
 
-const AdminPage = () => {
+const StatisticPage = () => {
   const navigate = useNavigate();
   const role = useSelector((state: RootState) => state.user.role);
 
@@ -24,4 +24,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default StatisticPage;

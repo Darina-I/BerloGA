@@ -7,6 +7,7 @@ import { makerApi } from "../../api/makerAPI";
 import Select from "../atoms/Select";
 import Button from "../atoms/Button";
 import { boardGameApi } from "../../api/boardGameAPI";
+import MessageForUser from "../atoms/MessageForUser";
 
 interface AddProps {
   onCloseModal: () => void;
@@ -42,12 +43,19 @@ const AddBoardGame = ({ onCloseModal }: AddProps) => {
     fetchMakers();
   }, []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    if (isSuccess) {
-      setIsSuccess(false);
-    }
     const isNumber = e.target.type === "number";
     setNewGame({
       ...newGame,
@@ -150,10 +158,9 @@ const AddBoardGame = ({ onCloseModal }: AddProps) => {
         />
         {errors.length > 0 && (
           <div className="text-red-600">
-            {" "}
             {errors?.map((e) => (
-              <p>{e}</p>
-            ))}{" "}
+              <MessageForUser content={e} isError />
+            ))}
           </div>
         )}
         <Button
@@ -162,7 +169,7 @@ const AddBoardGame = ({ onCloseModal }: AddProps) => {
           className="self-center px-7"
         />
         {isSuccess && (
-          <p className="text-green-600">Настольная игра успешно добавлена!</p>
+          <MessageForUser content="Настольная игра успешно добавлена!" />
         )}
       </form>
     </Modal>
