@@ -8,6 +8,7 @@ import type {
 import ListItems from "./ListItems";
 import Favourite from "../atoms/Favourite";
 import { StarRating } from "./StarRating";
+import Comments from "../organisms/Comments";
 
 interface BoardGameCardProps {
   boardgame: BoardGameItemProps | LibraryGamesProps;

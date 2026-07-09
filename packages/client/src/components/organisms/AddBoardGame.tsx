@@ -92,10 +92,7 @@ const AddBoardGame = ({ onCloseModal }: AddProps) => {
 
   return (
     <Modal title="Новая настольная игра" onClose={onCloseModal} width="w-1/2">
-      <form
-        className="bg-third-color w-full p-3 rounded-lg flex flex-col text-sm gap-3"
-        onSubmit={handleSubmit}
-      >
+      <form className="form_style" onSubmit={handleSubmit}>
         <div className="flex gap-3">
           <Input
             name="name"
@@ -157,11 +154,11 @@ const AddBoardGame = ({ onCloseModal }: AddProps) => {
           rows={8}
         />
         {errors.length > 0 && (
-          <div className="text-red-600">
+          <>
             {errors?.map((e) => (
               <MessageForUser content={e} isError />
             ))}
-          </div>
+          </>
         )}
         <Button
           type="submit"

@@ -49,7 +49,6 @@ app.get("/api/health", (req, res) => {
 });
 
 //подключение роутов
-app.use("/api", blockCommentRouter);
 app.use("/api/boardgames", boardgameRouter);
 app.use("/api/cities", cityRouter);
 app.use("/api/comments", commentRouter);
@@ -61,5 +60,6 @@ app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/requests", requestRouter);
+app.use("/api/commentblock", blockCommentRouter);
 
 export default app;

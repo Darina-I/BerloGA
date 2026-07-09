@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { authAPI } from "../../api/authAPI";
 import { exit } from "../../assets";
 import Button from "../atoms/Button";
@@ -6,7 +5,6 @@ import { logout } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
 
 const Header = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = async () => {
     try {

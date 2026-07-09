@@ -108,7 +108,7 @@ const GenresTable = () => {
         >
           <form
             onSubmit={handleSubmit}
-            className="bg-white p-3 rounded-lg w-full flex flex-col items-center gap-3"
+            className="form_style items-center gap-3"
           >
             <Input name="name" placeholder="Наименование жанра" />
             {errorAdd && <MessageForUser content={errorAdd} isError />}
