@@ -4,7 +4,7 @@ import { sequelize } from "../db";
 interface CommentAttributes {
   id?: number;
   blockComment_id: number;
-  user_id: string;
+  user_id: number;
   content: string;
   deleted_at?: Date;
 }

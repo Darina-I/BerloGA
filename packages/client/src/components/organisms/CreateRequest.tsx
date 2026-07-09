@@ -68,10 +68,7 @@ const CreateRequest = () => {
           title="Заявка на добавление игры"
           onClose={() => setIsOpen(false)}
         >
-          <form
-            className="bg-white rounded-lg w-full p-3 flex flex-col justify-center items-center gap-2"
-            onSubmit={handleSubmit}
-          >
+          <form className="form_style items-center" onSubmit={handleSubmit}>
             <Input label="Название игры" name="name" onChange={handleChange} />
             <Input
               label="Детали заявки"

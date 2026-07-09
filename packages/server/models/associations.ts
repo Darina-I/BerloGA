@@ -48,8 +48,8 @@ BlockComment.belongsTo(BoardGame, {
 });
 
 BlockComment.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
+  foreignKey: "author_id",
+  as: "author",
 });
 
 BlockComment.hasMany(Comment, {
@@ -161,7 +161,7 @@ User.hasMany(Library, {
 });
 
 User.hasMany(BlockComment, {
-  foreignKey: "user_id",
+  foreignKey: "author_id",
   as: "blockscomments",
 });
 

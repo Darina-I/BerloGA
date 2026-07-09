@@ -1,4 +1,4 @@
-import { BOARDGAME_API_URL } from "./config";
+import { BOARDGAME_API_URL, COMMENT_BLOCK_API } from "./config";
 import api from "./client";
 import type { BoardGameAttributes } from "../types/boardgame.types";
 
@@ -32,6 +32,28 @@ export const boardGameApi = {
     const response = await api.delete(
       `${BOARDGAME_API_URL}/${id}/genres/${genreId}`,
     );
+    return response.data;
+  },
+};
+
+export const commentBlockApi = {
+  getAll: async (gameId: number) => {
+    const response = await api.get(
+      `${BOARDGAME_API_URL}/${gameId}/comments-blocks`,
+    );
+    return response.data;
+  },
+  post: async (gameId: number, header: string) => {
+    const response = await api.post(
+      `${BOARDGAME_API_URL}/${gameId}/comments-blocks`,
+      { header },
+    );
+    return response.data;
+  },
+  postComment: async (blockId: number, content: string) => {
+    const response = await api.post(`${COMMENT_BLOCK_API}/${blockId}`, {
+      content,
+    });
     return response.data;
   },
 };

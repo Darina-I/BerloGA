@@ -11,3 +11,15 @@ body {
   color: #504141;
   font-family: "Lora";
 }
+
+.form_style {
+  background-color: var(--color-third-color);
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 0.75rem;
+}

@@ -4,7 +4,7 @@ import { sequelize } from "../db";
 interface BlockCommentAttributes {
   id?: number;
   game_id: number;
-  author: string;
+  author_id: number;
   header: string;
   deleted_at?: Date;
 }
@@ -23,7 +23,7 @@ BlockComment.init(
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    author: {
+    author_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

@@ -11,3 +11,4 @@ export const GENRE_API_URL = `${BASE_URL}/genres`;
 export const ADMIN_API_URL = `${BASE_URL}/admin`;
 export const REQUEST_API_URL = `${BASE_URL}/requests`;
 export const MAKER_API_URL = `${BASE_URL}/makers`;
+export const COMMENT_BLOCK_API = `${BASE_URL}/commentblock`;

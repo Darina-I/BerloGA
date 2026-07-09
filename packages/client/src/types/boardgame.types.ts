@@ -43,3 +43,26 @@ export interface BoardGameAttributes {
   maker_id?: number;
   pdf?: string;
 }
+
+//Блок комментариев
+export interface CommentsBlock {
+  id: number;
+  game_id: number;
+  header: string;
+  author: {
+    id: number;
+    nickname: string;
+  };
+  comments: Comment[];
+  createdAt: Date;
+}
+
+export interface Comment {
+  id: number;
+  user: {
+    id: number;
+    nickname: string;
+  };
+  content: string;
+  createdAt: Date;
+}
