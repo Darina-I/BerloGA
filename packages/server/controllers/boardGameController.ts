@@ -25,6 +25,34 @@ interface GenreGameWithAssociations extends GenreGame {
   genre: Genre;
 }
 
+/**
+ * @swagger
+ * /api/boardgames:
+ *   get:
+ *     summary: Получить список настольных игр (с фильтрацией по жанрам)
+ *     tags: [BoardGames]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: genres[]
+ *         in: query
+ *         required: false
+ *         schema:
+ *           type: array
+ *           items: {type: integer, example: [1, 3]}
+ *           description: Массив ID жанров для фильтрации
+ *     responses:
+ *       '200':
+ *         description: Список игр
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BoardGame'
+ *       '500':
+ *          description: Внутренняя ошибка сервера
+ */
 export const getAllBoardGames = async (req: Request, res: Response) => {
   try {
     const genresIds = parseNumberArray(req.query["genres[]"] as string[]) || [];
@@ -84,6 +112,34 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/boardgames/{id}:
+ *   get:
+ *     summary: Получить настольную игру по ID
+ *     tags: [BoardGames]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema: {type: integer, example: 7}
+ *         description: ID игры
+ *     responses:
+ *       '200':
+ *         description: Данные игры
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BoardGame'
+ *       '400':
+ *         description: ID игры не указан
+ *       '404':
+ *         description: Игра не найдена
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ */
 export const getBoardGameById = async (req: Request, res: Response) => {
   try {
     const gameId = parseInt(req.params.id as string, 10);
@@ -143,6 +199,102 @@ export const getBoardGameById = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/boardgames:
+ *   post:
+ *     summary: Создать новую настольную игру
+ *     tags: [BoardGames]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - maker_id
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: 'Catan'
+ *                 description: Название игры
+ *               description:
+ *                 type: string,
+ *                 nullable: true,
+ *                 example: 'Колонизаторы'
+ *               maker_id:
+ *                 type: integer
+ *                 example: 3
+ *                 description: ID производителя
+ *               min_players:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 3
+ *               max_players:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 4
+ *               time:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 120
+ *     responses:
+ *       '201':
+ *         description: Игра успешно создана
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BoardGame'
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ */
+
+export const postBoardGame = async (req: Request, res: Response) => {
+  try {
+    const newGame = req.body;
+
+    const newBoardGame = await BoardGame.create(newGame);
+
+    res.status(201).json(newBoardGame);
+  } catch (error) {
+    console.error("Ошибка при добавление настольной игры:", error);
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+/**
+ * @swagger
+ * /api/boardgames/{id}/genres:
+ *   get:
+ *     summary: Получить жанры настольной игры
+ *     tags: ["BoardGames: Genres"]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID игры
+ *         schema:
+ *           type: integer
+ *           example: 7
+ *     responses:
+ *       '200':
+ *         description: Список жанров игры
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Genre'
+ *       '400':
+ *         description: ID игры не указан
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ */
 export const getGenresGame = async (req: Request, res: Response) => {
   try {
     const gameId = parseInt(req.params.id as string, 10);
@@ -170,19 +322,58 @@ export const getGenresGame = async (req: Request, res: Response) => {
   }
 };
 
-export const postBoardGame = async (req: Request, res: Response) => {
-  try {
-    const newGame = req.body;
-
-    const newBoardGame = await BoardGame.create(newGame);
-
-    res.status(201).json(newBoardGame);
-  } catch (error) {
-    console.error("Ошибка при добавление настольной игры:", error);
-    res.status(500).json({ error: (error as Error).message });
-  }
-};
-
+/**
+ * @swagger
+ * /api/boardgames/{id}/genres:
+ *   post:
+ *     summary: Добавить жанр к настольной игре
+ *     tags: ['BoardGames: Genres']
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID игры
+ *         schema:
+ *           type: integer
+ *           example: 7
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - genreId
+ *             properties:
+ *               genreId:
+ *                 type: integer
+ *                 example: 5
+ *                 description: ID жанра, который нужно добавить к игре
+ *     responses:
+ *       '200':
+ *         description: Жанр успешно добавлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Жанр успешно добавлен к игре"
+ *       '400':
+ *         description: Некорректные ID
+ *       '404':
+ *         description: Игра или жанр не найдены
+ *       '409':
+ *         description: Этот жанр уже добавлен к игре
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ */
 export const postGenreGame = async (req: Request, res: Response) => {
   try {
     const gameId = parseInt(req.params.id as string, 10);
@@ -227,6 +418,49 @@ export const postGenreGame = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/boardgames/{id}/genres/{genreId}:
+ *   delete:
+ *     summary: Удалить связь жанра с настольной игрой
+ *     tags: ['BoardGames: Genres']
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *            type: integer,
+ *            example: 7,
+ *            description: ID настольной игры
+ *       - name: genreId
+ *         in: path
+ *         required: true
+ *         schema:
+ *            type: integer,
+ *            example: 5,
+ *            description: ID жанра, который нужно отвязать от игры
+ *     responses:
+ *       '200':
+ *         description: Связь успешно удалена
+ *         content:
+ *           application/json:
+ *             type: object
+ *             properties:
+ *               success:
+ *                  type: boolean,
+ *                  example: true
+ *               message:
+ *                  type: string,
+ *                  example: 'Жанр удалён из игры'
+ *       '400':
+ *          description: Некорректные ID
+ *       '404':
+ *          description: Связь жанр-игра не найдена!
+ *       '500':
+ *          description: Внутренняя ошибка сервера
+ */
 export const deleteGenre = async (req: Request, res: Response) => {
   try {
     const gameId = parseInt(req.params.id as string, 10);
@@ -244,7 +478,7 @@ export const deleteGenre = async (req: Request, res: Response) => {
     });
 
     if (!genregame) {
-      return res.status(400).json({ error: "Связь жанр-игра не найдена!" });
+      return res.status(404).json({ error: "Связь жанр-игра не найдена!" });
     }
 
     await genregame.destroy();

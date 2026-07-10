@@ -22,7 +22,7 @@ const UsersTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const data = await adminApi.getAllUsers();
+        const data = await usersApi.getAllAdmin();
         setUsers(data);
       } catch (error) {
         console.error("Ошибка при загрузке городов: ", error);

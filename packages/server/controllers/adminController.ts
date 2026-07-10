@@ -10,6 +10,30 @@ interface CountGamesResponse extends Genre {
   game_count: string;
 }
 
+/**
+ * @swagger
+ * /api/admin/countgames:
+ *   get:
+ *     summary: Статистика по количеству игр каждого жанра
+ *     tags: [Statistics]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Список жанров с количеством игр
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 required: [id, name, game_count]
+ *                 properties:
+ *                   id: {type: integer, example: 5}
+ *                   name: {type: string, example: 'Стратегия'}
+ *                   game_count: {type: integer, example: 12}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const getCountGamesByGenres = async (req: Request, res: Response) => {
   try {
     const countGames = (await Genre.findAll({
@@ -44,6 +68,45 @@ export const getCountGamesByGenres = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/admin/topgames:
+ *   get:
+ *     summary: "Топы настольных игр: по популярности и по рейтингу"
+ *     tags: [Statistics]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Топы игр
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required: [topByLibrary, topByRating]
+ *               properties:
+ *                 topByLibrary:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     required: [id, name, rating, library_count]
+ *                     properties:
+ *                       id: {type: integer,example: 7}
+ *                       name: {type: string, example: 'Catan'}
+ *                       rating: {type: number, example: 4, description: Средний рейтинг }
+ *                       library_count: {type: integer, example: 42, description: Количество добавлений в библиотеки}
+ *                 topByRating:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     required: [id, name, rating, library_count]
+ *                     properties:
+ *                       id: {type: integer,example: 7}
+ *                       name: {type: string, example: 'Catan'}
+ *                       rating: {type: number, example: 4, description: Средний рейтинг }
+ *                       library_count: {type: integer, example: 42, description: Количество добавлений в библиотеки}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const getTopGames = async (req: Request, res: Response) => {
   try {
     const topByLibrary = await BoardGame.findAll({
@@ -141,26 +204,6 @@ export const getTopGames = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log("Ошибка при получении статистики по настольным играм:", error);
-    res.status(500).json({ error: (error as Error).message });
-  }
-};
-
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await User.findAll({
-      order: [["id", "DESC"]],
-      include: [
-        {
-          model: City,
-          as: "city",
-          attributes: ["id", "name"],
-        },
-      ],
-    });
-
-    res.json(users);
-  } catch (error) {
-    console.error("Ошибка при получении пользователей", error);
     res.status(500).json({ error: (error as Error).message });
   }
 };

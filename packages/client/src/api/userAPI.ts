@@ -12,6 +12,10 @@ export const usersApi = {
     const response = await api.get(`${USER_API_URL}`);
     return response.data;
   },
+  getAllAdmin: async () => {
+    const response = await api.get(`${USER_API_URL}/admin`);
+    return response.data;
+  },
   getById: async (userId: number) => {
     const response = await api.get(`${USER_API_URL}/${userId}`);
     return response.data;
