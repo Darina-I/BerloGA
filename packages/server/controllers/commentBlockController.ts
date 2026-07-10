@@ -7,6 +7,32 @@ interface AuthRequest extends Request {
   user?: { userId: number };
 }
 
+/**
+ * @swagger
+ * /api/boardgames/{id}/comments-blocks:
+ *   get:
+ *     summary: Получить комментарии к игре
+ *     tags: ['BoardGames: Comments']
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema: {type: integer, example: 3}
+ *         description: ID игры, для которой запрашиваются комментарии
+ *     responses:
+ *       '200':
+ *         description: Список блоков комментариев с вложенными данными
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BlockComment'
+ *       '401': {description: Пользователь не авторизован}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const getComments = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {
@@ -46,6 +72,41 @@ export const getComments = async (req: AuthRequest, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/boardgames/{id}/comments-blocks:
+ *   post:
+ *     summary: Создать блок комментариев (тему обсуждения) для игры
+ *     tags: ['BoardGames: Comments']
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema: {type: integer, example: 3}
+ *         description: ID игры, к которой создаётся блок комментариев
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [header]
+ *             properties:
+ *               header:
+ *                 type: string
+ *                 example: 'Обсуждение партии Catan'
+ *                 description: Заголовок блока комментариев
+ *     responses:
+ *       '201':
+ *         description: Блок комментариев успешно создан
+ *         content:
+ *           application/json:
+ *             schema: {$ref: '#/components/schemas/BlockComment'}
+ *       '401': {description: Пользователь не авторизован}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const postBlock = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user) {

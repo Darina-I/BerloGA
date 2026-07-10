@@ -10,8 +10,4 @@ export const adminApi = {
     const response = await api.get(`${ADMIN_API_URL}/topgames`);
     return response.data;
   },
-  getAllUsers: async () => {
-    const response = await api.get(`${ADMIN_API_URL}/users`);
-    return response.data;
-  },
 };

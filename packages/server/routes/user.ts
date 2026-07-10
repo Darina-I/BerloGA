@@ -3,6 +3,7 @@ import {
   deleteGameLibrary,
   deleteUserGenre,
   getAllUsers,
+  getAllUsersAdmin,
   getLibrary,
   getUserById,
   getUserGenres,
@@ -20,6 +21,7 @@ const userRouter = express.Router();
 userRouter.use(authMiddleware); //только для авторизованных пользователей
 
 userRouter.route("/").get(getAllUsers);
+userRouter.route("/admin").get(getAllUsersAdmin);
 userRouter.route("/:id").get(getUserById).patch(checkAdmin, patchUserRole);
 userRouter.route("/:id/boardgames").get(getLibrary);
 

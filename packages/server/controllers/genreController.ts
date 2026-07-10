@@ -1,6 +1,26 @@
 import { Request, Response } from "express";
 import Genre from "../models/Genre";
 
+/**
+ * @swagger
+ * /api/genres:
+ *   get:
+ *     summary: Получить список всех жанров
+ *     tags: [Genres]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Список жанров игр
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Genre'
+ *       '500':
+ *         description: Внутренняя ошибка сервера
+ */
 export const getAllGenre = async (req: Request, res: Response) => {
   try {
     const genres = await Genre.findAll();
@@ -10,12 +30,39 @@ export const getAllGenre = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/genres:
+ *   post:
+ *     summary: Добавить новый жанр игры
+ *     tags: [Genres]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name]
+ *             properties:
+ *               name: {type: string, example: "Стратегия", description: Название жанра}
+ *     responses:
+ *       '201':
+ *         description: Создатель успешно создан
+ *         content:
+ *           application/json:
+ *             schema: {$ref: '#/components/schemas/Genre'}
+ *       '400': {description: Некорректные данные (отсутствует поле name)}
+ *       '500': {description: Внутренняя ошибка сервера}
+ *
+ */
 export const postGenre = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
     if (!name) {
       return res.status(400).json({
-        error: "Поле 'name' обязательно для заполнения",
+        error: "Некорректные данные (отсутствует поле name)",
       });
     }
 
@@ -30,6 +77,32 @@ export const postGenre = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/genres/{id}:
+ *   delete:
+ *     summary: Удалить жанр игр по ID
+ *     tags: [Genres]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema: {type: integer, example: 1}
+ *     responses:
+ *       '200':
+ *         description: Жанр игры успешно удалён
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: {type: string}
+ *       '400': {description: Некорректный ID жанра}
+ *       '404': {description: Жанр игры не найдено}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const deleteGenre = async (req: Request, res: Response) => {
   try {
     const genreId = parseInt(req.params.id as string, 10);

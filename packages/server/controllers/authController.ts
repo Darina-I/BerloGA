@@ -7,6 +7,35 @@ import City from "../models/City";
 const ACCESS_TOKEN_LIFE: number = 15 * 60 * 1000;
 const REFRESH_TOKEN_LIFE: number = 7 * 24 * 60 * 60 * 1000;
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Регистрация нового пользователя
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nickname, password]
+ *             properties:
+ *               nickname: {type: string, minLength: 3, example: "example_user"}
+ *               password: {type: string, format: password, example: "secret123"}
+ *     responses:
+ *       '201':
+ *         description: Пользователь успешно зарегистрирован
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: {type: string}
+ *                 user: {$ref: '#/components/schemas/User'}
+ *       '400': { description: Пользователь с таким никнеймом уже существует}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const register = async (req: Request, res: Response) => {
   try {
     const { nickname, password } = req.body;
@@ -44,6 +73,39 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Авторизация пользователя (логин)
+ *     description: |
+ *       При успешном входе сервер устанавливает HTTP-only куки:
+ *       - `access_token` (живет 15 мин)
+ *       - `refresh_token` (живет 7 дней)
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [nickname, password]
+ *             properties:
+ *               nickname: {type: string, example: "example_user"}
+ *               password: {type: string, format: password, example: "secret123"}
+ *     responses:
+ *       '200':
+ *         description: Авторизация успешна, куки установлены
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: {type: string}
+ *                 user: {$ref: '#/components/schemas/User'}
+ *       '401': {description: Неверный никнейм или пароль}
+ *       '500': {description: Внутренняя ошибка сервера}
+ */
 export const login = async (req: Request, res: Response) => {
   try {
     const { nickname, password } = req.body;
@@ -84,7 +146,7 @@ export const login = async (req: Request, res: Response) => {
       maxAge: REFRESH_TOKEN_LIFE, // 7 days
     });
 
-    res.json({
+    const response = {
       message: "Авторизация успешна",
       user: {
         id: user.id,
@@ -95,13 +157,38 @@ export const login = async (req: Request, res: Response) => {
         is_show_city: user.is_show_city,
         role: user.role,
       },
-    });
+      access_token: "",
+    };
+
+    if (process.env.NODE_ENV === "development") {
+      response.access_token = tokens.accessToken;
+    }
+
+    res.json(response);
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Обновить Access Token по Refresh Token
+ *     tags: [Auth]
+ *     responses:
+ *       '200':
+ *         description: Access Token успешно обновлен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: {type: string}
+ *       '400': { description: Refresh token отсутствует в куках}
+ *       '500': { description: Invalid refresh token или ошибка сервера}
+ */
 export const refresh = async (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies.refresh_token;
@@ -126,6 +213,19 @@ export const refresh = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Выход из системы
+ *     description: |
+ *       Сервер удаляет куки access_token и refresh_token.
+ *       После этого сессия пользователя завершается.
+ *     tags: [Auth]
+ *     responses:
+ *       '200': {description: Успешный выход, куки удалены}
+ *       '500': {description: Ошибка при выходе}
+ */
 export const logout = async (req: Request, res: Response) => {
   try {
     res.clearCookie("access_token");

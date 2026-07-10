@@ -18,6 +18,10 @@ import userRouter from "./routes/user";
 import authRouter from "./routes/auth";
 import adminRouter from "./routes/admin";
 
+import { apiReference } from "@scalar/express-api-reference";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerConfig from "./swaggerConfig";
+
 dotenv.config();
 
 const app = express();
@@ -31,6 +35,22 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+
+const swaggerSpec = swaggerJSDoc(swaggerConfig);
+
+app.get("/openapi.json", (req, res) => {
+  res.json(swaggerSpec);
+});
+
+app.use(
+  "/docs",
+  apiReference({
+    spec: {
+      url: "/openapi.json",
+    },
+    theme: "default",
+  }),
+);
 
 async function initializeApp() {
   try {
