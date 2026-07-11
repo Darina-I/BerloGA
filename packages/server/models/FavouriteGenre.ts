@@ -6,7 +6,10 @@ interface FavouriteGenreAttributes {
   user_id: number;
 }
 
-class FavouriteGenre extends Model<FavouriteGenreAttributes> {}
+class FavouriteGenre extends Model<FavouriteGenreAttributes> {
+  declare genre_id: number;
+  declare user_id: number;
+}
 
 FavouriteGenre.init(
   {

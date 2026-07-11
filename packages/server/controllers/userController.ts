@@ -576,8 +576,6 @@ export const getUserGenres = async (req: AuthRequest, res: Response) => {
       ],
     })) as FavouriteGenreWithAssociation[];
 
-    console.log(favourite);
-
     const genres = favourite.map((item) => item.genre);
 
     res.status(200).json(genres);

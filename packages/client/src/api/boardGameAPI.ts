@@ -7,10 +7,13 @@ interface Filter {
 }
 
 export const boardGameApi = {
-  getAll: async (filter?: Filter) => {
-    const response = await api.get(`${BOARDGAME_API_URL}`, {
-      params: filter,
-    });
+  getAll: async (filter?: Filter, favouriteGenresId?: Array<number>) => {
+    const params = {
+      genres: filter,
+      favouriteGenresId: favouriteGenresId,
+    };
+
+    const response = await api.get(`${BOARDGAME_API_URL}`, { params });
     return response.data;
   },
   getById: async (gameId: number) => {
