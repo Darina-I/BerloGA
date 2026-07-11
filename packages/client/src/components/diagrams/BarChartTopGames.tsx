@@ -50,21 +50,7 @@ const BarChartTopGames = () => {
   };
 
   return (
-    <div className="flex-1 w-fit text-sm border rounded-lg p-3 border-main-color">
-      {/* <div className="flex gap-2 justify-center">
-        <div
-          onClick={() => handleClick("topByLibrary")}
-          className="rounded-lg p-1 bg-second-color hover:bg-[#d9ad6a] cursor-pointer"
-        >
-          Топ 10 по кол-ву добавлений в библиотеку
-        </div>
-        <div
-          onClick={() => handleClick("topByRating")}
-          className="rounded-lg p-1 bg-second-color hover:bg-[#d9ad6a] cursor-pointer"
-        >
-          Топ 10 по рейтингу
-        </div>
-      </div> */}
+    <div className="flex-1 w-fit text-sm rounded-lg p-3 bg-white shadow-main-color shadow-md">
       <Tabs
         list={[
           {

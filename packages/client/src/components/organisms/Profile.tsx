@@ -63,7 +63,7 @@ const Profile = ({ userInfo }: ProfileProps) => {
   };
 
   return (
-    <div className="border-2 border-second-color rounded-lg p-5 space-y-5 relative">
+    <div className=" bg-white shadow-main-color shadow-md rounded-lg p-5 space-y-5 relative">
       {isMe && (
         <div className="absolute right-5">
           {!isEdit && (

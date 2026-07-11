@@ -10,6 +10,7 @@ import { profileAPI } from "../../api/userAPI";
 import type { User } from "../../types/user.types";
 import { setUser } from "../../store/userSlice";
 import Checkbox from "../atoms/Checkbox";
+import { crossRed } from "../../assets";
 
 interface EditProfileProps {
   closeEdit: () => void;
@@ -83,7 +84,10 @@ const EditProfile = ({ closeEdit }: EditProfileProps) => {
 
   return (
     <form className="flex gap-4 w-full" onSubmit={handleSubmit}>
-      <Button content="Сохранить" type="submit" className="absolute right-5" />
+      <div className="absolute right-2 top-2 flex gap-2">
+        <Button content="Сохранить" type="submit" />
+        <Button content={crossRed} withoutBG isIconButton onClick={closeEdit} />
+      </div>
       <div className="w-1/3 space-y-3">
         <Input
           name="nickname"

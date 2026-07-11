@@ -17,6 +17,7 @@ import database from "./database.svg";
 import trash from "./trash.svg";
 import house from "./house.svg";
 import exit from "./exit.svg";
+import crossRed from "./cross_red.svg";
 
 export {
   logo,
@@ -38,4 +39,5 @@ export {
   trash,
   house,
   exit,
+  crossRed,
 };
