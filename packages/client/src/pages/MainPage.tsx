@@ -1,5 +1,7 @@
 import BoardGames from "../components/organisms/BoardGames";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 import { boardGameApi } from "../api/boardGameAPI";
 import type { BoardGameItemProps } from "../types/boardgame.types";
 import Filter from "../components/organisms/Filter";

@@ -19,7 +19,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={` ${!withoutBG && "py-2 px-3 bg-main-color rounded-lg"} cursor-pointer ${className} text-white`}
+      className={` ${!withoutBG && "py-2 px-3 bg-main-color rounded-lg"} cursor-pointer mx-2 ${className} text-white`}
       type={type}
       disabled={disabled}
       onClick={onClick}

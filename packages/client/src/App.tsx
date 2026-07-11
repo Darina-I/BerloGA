@@ -16,7 +16,6 @@ import UsersPage from "./pages/UsersPage";
 
 const App = () => {
   const isAuth = useSelector((state: RootState) => state.user.isAuth);
-  const role = useSelector((state: RootState) => state.user.role);
 
   const ProtectedRoutes = () => {
     if (!isAuth) {

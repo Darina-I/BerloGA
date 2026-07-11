@@ -7,6 +7,7 @@ import GenreGame from "../models/GenreGame";
 import { sequelize } from "../db";
 import Library from "../models/Library";
 import { parseNumberArray } from "../utils/parseNumberArray";
+import FavouriteGenre from "../models/FavouriteGenre";
 
 interface BoardGameWithAssociations extends BoardGame {
   maker: {
@@ -23,6 +24,10 @@ interface BoardGameWithAssociations extends BoardGame {
 
 interface GenreGameWithAssociations extends GenreGame {
   genre: Genre;
+}
+
+interface AuthRequest extends Request {
+  user?: { userId: number };
 }
 
 /**
@@ -53,16 +58,47 @@ interface GenreGameWithAssociations extends GenreGame {
  *       '500':
  *          description: Внутренняя ошибка сервера
  */
-export const getAllBoardGames = async (req: Request, res: Response) => {
+export const getAllBoardGames = async (req: AuthRequest, res: Response) => {
   try {
-    const genresIds = parseNumberArray(req.query["genres[]"] as string[]) || [];
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ error: "Пользователь не авторизован" });
+    }
 
+    const currentUserId = req.user.userId;
+
+    const genresIds = parseNumberArray(req.query["genres[]"] as string[]) || [];
     const where: WhereOptions = {};
     if (genresIds.length > 0) {
       where["$genres.id$"] = { [Op.in]: genresIds };
     }
-
     const genresRequired = genresIds.length > 0;
+
+    const favouriteGenres = await FavouriteGenre.findAll({
+      where: { user_id: currentUserId },
+    });
+
+    const favouriteGenresId = favouriteGenres.map((fg) => fg.genre_id);
+
+    let order: any[] = [];
+
+    if (favouriteGenresId.length > 0) {
+      order = [
+        [
+          sequelize.literal(`
+            CASE
+              WHEN "BoardGame"."id" IN (
+                SELECT "game_id" FROM "genregames"
+                WHERE "genre_id" IN (${favouriteGenresId.join(", ")})
+              )
+              THEN 0
+              ELSE 1
+            END
+          `),
+          "ASC",
+        ],
+        ...order,
+      ];
+    }
 
     const boardgames = (await BoardGame.findAll({
       attributes: {
@@ -83,6 +119,7 @@ export const getAllBoardGames = async (req: Request, res: Response) => {
         ],
       },
       where,
+      order,
       include: [
         {
           model: Maker,
