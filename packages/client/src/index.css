@@ -8,6 +8,9 @@
 
 body {
   background-color: #fff8eb;
+  background-image: url("/bg.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #504141;
   font-family: "Lora";
 }

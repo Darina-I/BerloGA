@@ -33,7 +33,7 @@ const BarChartsGenres = () => {
   }, []);
 
   return (
-    <div className=" w-fit text-sm border rounded-lg p-3 border-main-color">
+    <div className=" w-fit text-sm rounded-lg p-3 bg-white shadow-main-color shadow-md">
       <p className="font-bold text-base mb-2">Количество игр каждого жанра</p>
       <ResponsiveContainer height={450} width={470}>
         <BarChart layout="vertical" data={data} barSize={20}>
